@@ -14,49 +14,11 @@ namespace MidnightLizard.Schemes.Commander.Controllers
 {
     [ApiVersion("1.0")]
     [Route("[controller]")]
-    public class SchemesController : Controller
+    public class SchemeController : Controller
     {
-        protected class DeliveryHandler : IDeliveryHandler<string, string>
-        {
-            protected readonly ILogger logger;
-            protected readonly TaskCompletionSource<IActionResult> result;
-            public DeliveryHandler(ILogger logger)
-            {
-                this.logger = logger;
-                this.result = new TaskCompletionSource<IActionResult>();
-            }
-
-            public bool MarshalData => true;
-
-            public Task<IActionResult> Result => this.result.Task;
-
-            public void HandleError(object sender, Error e)
-            {
-                result.TrySetResult(new BadRequestObjectResult(e.Reason));
-                this.logger.LogError("OnError: " + e.Reason);
-            }
-
-            public void HandleDeliveryReport(Message<string, string> msg)
-            {
-                if (msg.Error.HasError)
-                {
-                    result.TrySetResult(new BadRequestObjectResult(msg.Error.Reason));
-                    this.logger.LogError("OnError: " + msg.Error.Reason);
-                }
-                else
-                {
-                    result.TrySetResult(new AcceptedResult("", msg));
-                    this.logger.LogInformation("Message sent:");
-                    this.logger.LogInformation($"\tTopic: {msg.Topic}");
-                    this.logger.LogInformation($"\tKey: {msg.Key}");
-                    this.logger.LogInformation($"\tValue: {msg.Value}");
-                }
-            }
-        }
-
         protected readonly ILogger logger;
 
-        public SchemesController(ILogger<SchemesController> logger)
+        public SchemeController(ILogger<SchemeController> logger)
         {
             this.logger = logger;
         }
@@ -93,6 +55,18 @@ namespace MidnightLizard.Schemes.Commander.Controllers
             {
                 return BadRequest(ModelState);
             }
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Publish(Guid id)
+        {
+            return Ok();
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Unpublish(Guid id)
+        {
+            return Ok();
         }
     }
 }
