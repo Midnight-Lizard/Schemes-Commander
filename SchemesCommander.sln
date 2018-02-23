@@ -10,7 +10,67 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidnightLizard.Schemes.Commander", "app\MidnightLizard.Schemes.Commander.csproj", "{732DD1C9-D41E-483E-A60C-3B57A0ECF562}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "kube", "kube\", "{ACA879C6-7CBC-4F61-9FF6-2F5D6FA561D4}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_50152"
+		Debug.AspNetCompiler.PhysicalPath = "kube\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50152\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_50152"
+		Release.AspNetCompiler.PhysicalPath = "kube\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50152\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "50152"
+	EndProjectSection
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "shell", "shell\", "{9DA5DB32-FDE7-4097-8A58-2ED2A1B960DA}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_50156"
+		Debug.AspNetCompiler.PhysicalPath = "shell\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50156\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_50156"
+		Release.AspNetCompiler.PhysicalPath = "shell\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50156\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "50156"
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{732DD1C9-D41E-483E-A60C-3B57A0ECF562}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{732DD1C9-D41E-483E-A60C-3B57A0ECF562}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{732DD1C9-D41E-483E-A60C-3B57A0ECF562}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{732DD1C9-D41E-483E-A60C-3B57A0ECF562}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACA879C6-7CBC-4F61-9FF6-2F5D6FA561D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACA879C6-7CBC-4F61-9FF6-2F5D6FA561D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACA879C6-7CBC-4F61-9FF6-2F5D6FA561D4}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACA879C6-7CBC-4F61-9FF6-2F5D6FA561D4}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{9DA5DB32-FDE7-4097-8A58-2ED2A1B960DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DA5DB32-FDE7-4097-8A58-2ED2A1B960DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DA5DB32-FDE7-4097-8A58-2ED2A1B960DA}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DA5DB32-FDE7-4097-8A58-2ED2A1B960DA}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
