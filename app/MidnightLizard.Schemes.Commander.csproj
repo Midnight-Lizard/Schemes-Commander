@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <LangVersion>Latest</LangVersion>
+    <Configurations>Debug;Release;Test</Configurations>
+    <StartupObject>MidnightLizard.Schemes.Commander.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,5 +20,24 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
   </ItemGroup>
+  
+ <Choose>
+    <When Condition=" '$(Configuration)'=='Test' ">
+      <ItemGroup>
+        <PackageReference Include="NSubstitute" Version="3.1.0" />
+        <PackageReference Include="xunit" Version="2.3.1" />
+        <PackageReference Include="FluentAssertions" Version="5.0.0" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+        <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.1" />
+        <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+      </ItemGroup>
+    </When>
+    <When Condition=" '$(Configuration)'!='Test' ">
+      <ItemGroup>
+        <Compile Remove="**/*.Spec.cs" />
+        <Compile Remove="**/*.Stub.cs" />
+      </ItemGroup>
+    </When>
+  </Choose>
 
 </Project>
