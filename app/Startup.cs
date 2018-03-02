@@ -10,6 +10,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using MidnightLizard.Schemes.Commander.AutofacModules;
 
 namespace MidnightLizard.Schemes.Commander
 {
@@ -23,9 +26,8 @@ namespace MidnightLizard.Schemes.Commander
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
             services.AddApiVersioning(o =>
             {
                 o.ReportApiVersions = true;
@@ -33,6 +35,22 @@ namespace MidnightLizard.Schemes.Commander
                     new HeaderApiVersionReader("version", "api-version", "x-api-version"),
                     new QueryStringApiVersionReader());
             });
+
+            services.AddMvc(opt =>
+            {
+                opt.ModelBinderProviders.Insert(0, new Requests.RequestModelBinderProvider());
+            });
+
+            // Autofac - last part!
+            var container = new ContainerBuilder();
+            container.Populate(services);
+
+            //container.RegisterModule<MediatorModule>();
+            container.RegisterModule<SerializationModule>();
+            container.RegisterModule<ModelBinderModule>();
+            container.RegisterModule<VersionModule>();
+
+            return new AutofacServiceProvider(container.Build());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
