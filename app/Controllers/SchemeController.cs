@@ -9,10 +9,14 @@ using Confluent.Kafka.Serialization;
 using System.Text;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using MidnightLizard.Schemes.Commander.Requests.PublishScheme;
 
 namespace MidnightLizard.Schemes.Commander.Controllers
 {
     [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
+    [ApiVersion("1.2")]
+    [ApiVersion("1.3")]
     [Route("[controller]")]
     public class SchemeController : Controller
     {
@@ -58,8 +62,9 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Publish(Guid id)
+        public async Task<IActionResult> Publish(Guid id, PublishSchemeRequest request)
         {
+            HttpContext.GetRequestedApiVersion();
             return Ok();
         }
 
