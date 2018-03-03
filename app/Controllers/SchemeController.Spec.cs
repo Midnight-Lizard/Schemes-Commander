@@ -30,13 +30,23 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         public class PublishSpec : SchemeControllerSpec
         {
             [It(nameof(SchemeController.Publish))]
-            public async Task Should()
+            public async Task Should_successfuly_process_correct_request()
             {
                 var json = JsonConvert.SerializeObject(PublishSchemeRequestSpec.CorrectPublishSchemeRequest);
                 HttpContent jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
                 var result = await this.testClient.PostAsync("scheme", jsonContent);
 
                 result.IsSuccessStatusCode.Should().BeTrue();
+            }
+
+            [It(nameof(SchemeController.Publish))]
+            public async Task Should_return_BadRequest_response_when_request_is_incorrect()
+            {
+                var json = JsonConvert.SerializeObject(new PublishSchemeRequest());
+                HttpContent jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
+                var result = await this.testClient.PostAsync("scheme", jsonContent);
+
+                result.IsSuccessStatusCode.Should().BeFalse();
             }
         }
     }

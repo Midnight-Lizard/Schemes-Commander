@@ -16,6 +16,7 @@ using MidnightLizard.Schemes.Commander.AutofacModules;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MidnightLizard.Schemes.Commander.Requests;
+using MidnightLizard.Schemes.Commander.Requests.ModelBinding;
 
 namespace MidnightLizard.Schemes.Commander
 {
@@ -52,7 +53,7 @@ namespace MidnightLizard.Schemes.Commander
 
             //container.RegisterModule<MediatorModule>();
             container.RegisterModule<SerializationModule>();
-            container.RegisterModule<ModelBinderModule>();
+            container.RegisterModule<ModelBindingModule>();
             container.RegisterModule<VersionModule>();
 
             return new AutofacServiceProvider(container.Build());

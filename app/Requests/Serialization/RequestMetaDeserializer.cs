@@ -7,11 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MidnightLizard.Schemes.Commander.Requests.Serialization
 {
-    public class RequestDeserializer
+    public interface IRequestMetaDeserializer
+    {
+        object Deserialize(Type requestType, ApiVersion apiVersion, string requestJson);
+    }
+
+    public class RequestMetaDeserializer: IRequestMetaDeserializer
     {
         protected readonly IEnumerable<Meta<Lazy<IRequestDeserializer>>> deserializers;
 
-        public RequestDeserializer(IEnumerable<Meta<Lazy<IRequestDeserializer>>> deserializers)
+        public RequestMetaDeserializer(IEnumerable<Meta<Lazy<IRequestDeserializer>>> deserializers)
         {
             this.deserializers = deserializers;
         }
@@ -21,8 +26,11 @@ namespace MidnightLizard.Schemes.Commander.Requests.Serialization
             var deserializer = this.deserializers.FirstOrDefault(d =>
                 d.Metadata[nameof(Type)] as Type == requestType &&
                 (d.Metadata[nameof(Version)] as IReadOnlyList<ApiVersion>).Any(v => v == apiVersion));
-
-            return null;
+            if (deserializer != null)
+            {
+               return (deserializer.Value.Value as IRequestDeserializer<object>).Deserialize(requestJson);
+            }
+            throw new ArgumentException($"Deserializer for {requestType} and version {apiVersion} has not been found");
         }
     }
 }

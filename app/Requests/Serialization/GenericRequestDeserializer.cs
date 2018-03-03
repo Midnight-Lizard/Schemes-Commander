@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace MidnightLizard.Schemes.Commander.Requests.Serialization
 {
     public interface IRequestDeserializer { }
-    public interface IRequestDeserializer<TRequest> : IRequestDeserializer
+    public interface IRequestDeserializer<out TRequest> : IRequestDeserializer
     {
         TRequest Deserialize(string requestJson);
     }

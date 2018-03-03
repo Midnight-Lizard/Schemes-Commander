@@ -69,7 +69,7 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         {
             if (ModelState.IsValid)
             {
-                return Ok();
+                return Accepted();
             }
             return BadRequest(ModelState);
         }

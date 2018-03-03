@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MidnightLizard.Schemes.Commander.Requests
+namespace MidnightLizard.Schemes.Commander.Requests.ModelBinding
 {
     public class RequestModelBinderProvider : IModelBinderProvider
     {

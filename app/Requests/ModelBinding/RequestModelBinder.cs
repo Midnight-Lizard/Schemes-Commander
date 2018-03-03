@@ -1,22 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using MidnightLizard.Schemes.Commander.Requests.ModelBinder;
+using MidnightLizard.Schemes.Commander.Requests.ModelBinding;
 using MidnightLizard.Schemes.Commander.Requests.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
+namespace MidnightLizard.Schemes.Commander.Requests.ModelBinding
 {
     public class RequestModelBinder : IModelBinder
     {
-        protected readonly RequestDeserializer requestSerializer;
+        protected readonly IRequestMetaDeserializer requestSerializer;
         protected readonly RequestVersionAccessor requestVersionAccessor;
         protected readonly RequestBodyAccessor requestBodyAccessor;
 
         public RequestModelBinder(
-            RequestDeserializer requestSerializer,
+            IRequestMetaDeserializer requestSerializer,
             RequestVersionAccessor requestVersionAccessor,
             RequestBodyAccessor requestBodyAccessor)
         {
