@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using MidnightLizard.Schemes.Commander.Requests.Base;
 using MidnightLizard.Testing.Utilities;
 using System;
 using System.Collections.Generic;
@@ -25,10 +26,29 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
             private readonly PublishSchemeRequestValidator validator = new PublishSchemeRequestValidator();
 
             [It(nameof(PublishSchemeRequestValidator))]
+            public void Should_succeed_with_correct_request()
+            {
+                validator.ShouldNotHaveValidationErrorFor(x => x as object,
+                    CorrectPublishSchemeRequest);
+            }
+
+            [It(nameof(PublishSchemeRequestValidator))]
             public void Should_fail_when_some_required_fields_are_empty()
             {
                 validator.ShouldHaveValidationErrorFor(x => x.Id, Guid.Empty);
                 validator.ShouldHaveValidationErrorFor(x => x.AggregateId, Guid.Empty);
+            }
+
+            [It(nameof(PublishSchemeRequestValidator))]
+            public void Should_succeed_when_required_fields_have_values()
+            {
+                validator.ShouldNotHaveValidationErrorFor(x => x.Id, Guid.NewGuid());
+                validator.ShouldNotHaveValidationErrorFor(x => x.AggregateId, Guid.NewGuid());
+            }
+
+            [It(nameof(PublishSchemeRequestValidator))]
+            public void Should_fail_when_PublisherId_is_empty()
+            {
                 validator.ShouldHaveValidationErrorFor(x => x.PublisherId, Guid.Empty);
             }
 
@@ -39,10 +59,8 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
             }
 
             [It(nameof(PublishSchemeRequestValidator))]
-            public void Should_succeed_when_required_fields_have_values()
+            public void Should_succeed_when_PublisherId_has_value()
             {
-                validator.ShouldNotHaveValidationErrorFor(x => x.Id, Guid.NewGuid());
-                validator.ShouldNotHaveValidationErrorFor(x => x.AggregateId, Guid.NewGuid());
                 validator.ShouldNotHaveValidationErrorFor(x => x.PublisherId, Guid.NewGuid());
             }
 
