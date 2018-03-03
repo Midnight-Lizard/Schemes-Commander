@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MidnightLizard.Schemes.Commander.Requests.ModelBinder;
@@ -14,7 +15,7 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
 {
     public class RequestModelBinderSpec
     {
-        private readonly RequestSerializer requestSerializer;
+        private readonly RequestDeserializer requestSerializer;
         private readonly RequestVersionAccessor versionAccessor;
         private readonly RequestBodyAccessor bodyAccessor;
         private readonly RequestModelBinder modelBinder;
@@ -24,7 +25,7 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
 
         public RequestModelBinderSpec()
         {
-            this.requestSerializer = Substitute.For<RequestSerializer>();
+            this.requestSerializer = Substitute.For<RequestDeserializer>();
             this.versionAccessor = Substitute.For<RequestVersionAccessor>();
             this.bodyAccessor = Substitute.For<RequestBodyAccessor>();
             this.modelBinder = new RequestModelBinder(this.requestSerializer, this.versionAccessor, this.bodyAccessor);
@@ -33,6 +34,7 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
             this.context.ModelType.Returns(typeof(PublishSchemeRequest));
             this.versionAccessor.GetApiVersion(this.context).Returns(this.testApiVersion);
             this.bodyAccessor.ReadAsync(this.context).Returns(this.testBody);
+            this.context.ModelState = new ModelStateDictionary();
         }
 
         [It(nameof(RequestModelBinder.BindModelAsync))]
@@ -66,6 +68,40 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
 
             this.requestSerializer.Received(1)
                 .Deserialize(typeof(PublishSchemeRequest), this.testApiVersion, this.testBody);
+        }
+
+        [It(nameof(RequestModelBinder.BindModelAsync))]
+        public async Task Should_set_ModelBindingContext__Result_to_Success()
+        {
+            await this.modelBinder.BindModelAsync(this.context);
+
+            this.context.Result.IsModelSet.Should().BeTrue();
+        }
+
+        [It(nameof(RequestModelBinder.BindModelAsync))]
+        public async Task Should_set_ModelBindingContext__Result_to_Fail_when_Exception()
+        {
+            this.requestSerializer.Deserialize(typeof(PublishSchemeRequest), this.testApiVersion, this.testBody)
+                .Returns(x => throw new Exception("test"));
+
+            await this.modelBinder.BindModelAsync(this.context);
+
+            this.context.Result.IsModelSet.Should().BeFalse();
+        }
+
+        [It(nameof(RequestModelBinder.BindModelAsync))]
+        public async Task Should_add_Error_to_ModelState_when_Exception_raised()
+        {
+            var testErrorMessage = "test error message";
+            this.requestSerializer.Deserialize(typeof(PublishSchemeRequest), this.testApiVersion, this.testBody)
+                .Returns(x => throw new Exception(testErrorMessage));
+
+            await this.modelBinder.BindModelAsync(this.context);
+
+            this.context.ModelState.Should().HaveCount(1);
+            var firstState = this.context.ModelState.First();
+            firstState.Value.Errors.Should().HaveCount(1);
+            firstState.Value.Errors[0].ErrorMessage.Should().Be(testErrorMessage);
         }
     }
 }

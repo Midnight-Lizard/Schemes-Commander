@@ -10,6 +10,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using MidnightLizard.Schemes.Commander.Requests.PublishScheme;
+using System.Net;
 
 namespace MidnightLizard.Schemes.Commander.Controllers
 {
@@ -62,10 +63,15 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         //}
 
         [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Publish(PublishSchemeRequest request)
         {
-            HttpContext.GetRequestedApiVersion();
-            return Ok();
+            if (ModelState.IsValid)
+            {
+                return Ok();
+            }
+            return BadRequest(ModelState);
         }
 
         [HttpDelete("{id:guid}")]

@@ -11,6 +11,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using NSubstitute;
+using Newtonsoft.Json;
 
 namespace MidnightLizard.Schemes.Commander.Controllers
 {
@@ -31,8 +32,9 @@ namespace MidnightLizard.Schemes.Commander.Controllers
             [It(nameof(SchemeController.Publish))]
             public async Task Should()
             {
-                HttpContent json = new StringContent($"{{Id:\"{Guid.NewGuid()}\"}}", Encoding.UTF8, "application/json");
-                var result = await this.testClient.PostAsync("scheme", json);
+                var json = JsonConvert.SerializeObject(PublishSchemeRequestSpec.CorrectPublishSchemeRequest);
+                HttpContent jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
+                var result = await this.testClient.PostAsync("scheme", jsonContent);
 
                 result.IsSuccessStatusCode.Should().BeTrue();
             }

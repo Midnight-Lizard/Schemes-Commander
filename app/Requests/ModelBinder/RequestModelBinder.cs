@@ -11,12 +11,12 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
 {
     public class RequestModelBinder : IModelBinder
     {
-        protected readonly RequestSerializer requestSerializer;
+        protected readonly RequestDeserializer requestSerializer;
         protected readonly RequestVersionAccessor requestVersionAccessor;
         protected readonly RequestBodyAccessor requestBodyAccessor;
 
         public RequestModelBinder(
-            RequestSerializer requestSerializer,
+            RequestDeserializer requestSerializer,
             RequestVersionAccessor requestVersionAccessor,
             RequestBodyAccessor requestBodyAccessor)
         {
@@ -31,7 +31,16 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
             var modelType = bindingContext.ModelType;
             var requestJson = await this.requestBodyAccessor.ReadAsync(bindingContext);
 
-            this.requestSerializer.Deserialize(modelType, version, requestJson);
+            try
+            {
+                var request = this.requestSerializer.Deserialize(modelType, version, requestJson);
+
+                bindingContext.Result = ModelBindingResult.Success(request);
+            }
+            catch (Exception ex)
+            {
+                bindingContext.ModelState.AddModelError(bindingContext.FieldName, ex.Message);
+            }
         }
     }
 }

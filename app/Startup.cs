@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using MidnightLizard.Schemes.Commander.AutofacModules;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using MidnightLizard.Schemes.Commander.Requests;
 
 namespace MidnightLizard.Schemes.Commander
 {
@@ -38,8 +41,10 @@ namespace MidnightLizard.Schemes.Commander
 
             services.AddMvc(opt =>
             {
-                opt.ModelBinderProviders.Insert(0, new Requests.RequestModelBinderProvider());
-            });
+                opt.ModelBinderProviders.Insert(0, new RequestModelBinderProvider());
+            }).AddFluentValidation(fv => fv
+                .RegisterValidatorsFromAssemblyContaining<Startup>()
+                .ImplicitlyValidateChildProperties = true);
 
             // Autofac - last part!
             var container = new ContainerBuilder();
