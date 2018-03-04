@@ -1,5 +1,4 @@
-﻿using MediatR;
-using MidnightLizard.Schemes.Commander.Requests.Base;
+﻿using MidnightLizard.Schemes.Commander.Requests.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using MidnightLizard.Schemes.Commander.Requests.PublishScheme;
 using System.Net;
+using MidnightLizard.Schemes.Commander.Requests.Queue;
 
 namespace MidnightLizard.Schemes.Commander.Controllers
 {
@@ -22,10 +23,14 @@ namespace MidnightLizard.Schemes.Commander.Controllers
     public class SchemeController : Controller
     {
         protected readonly ILogger logger;
+        protected readonly IRequestQueuer<SCHEMES_QUEUE_CONFIG> requestQueuer;
 
-        public SchemeController(ILogger<SchemeController> logger)
+        public SchemeController(
+            ILogger<SchemeController> logger,
+            IRequestQueuer<SCHEMES_QUEUE_CONFIG> requestQueuer)
         {
             this.logger = logger;
+            this.requestQueuer = requestQueuer;
         }
 
         //[HttpPost]
@@ -65,10 +70,12 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Publish(PublishSchemeRequest request)
         {
             if (ModelState.IsValid)
             {
+                await this.requestQueuer.QueueRequest(request);
                 return Accepted();
             }
             return BadRequest(ModelState);

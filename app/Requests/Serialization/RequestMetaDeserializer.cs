@@ -31,7 +31,7 @@ namespace MidnightLizard.Schemes.Commander.Requests.Serialization
             {
                return (deserializer.Value.Value as IRequestDeserializer<Request>).Deserialize(requestJson);
             }
-            throw new ArgumentException($"Deserializer for {requestType} and version {apiVersion} has not been found");
+            throw new ApplicationException($"Deserializer for {requestType} and version {apiVersion} has not been found");
         }
     }
 }

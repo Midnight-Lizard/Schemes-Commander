@@ -7,6 +7,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Autofac.Extensions.DependencyInjection;
 
 namespace MidnightLizard.Schemes.Commander
 {
@@ -19,6 +20,7 @@ namespace MidnightLizard.Schemes.Commander
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureServices(x => x.AddAutofac())
                 .UseStartup<Startup>()
                 .Build();
     }

@@ -17,6 +17,9 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using MidnightLizard.Schemes.Commander.Requests;
 using MidnightLizard.Schemes.Commander.Requests.ModelBinding;
+using MidnightLizard.Schemes.Commander.Requests.Queue;
+using Newtonsoft.Json;
+using MidnightLizard.Schemes.Commander.Middlewares;
 
 namespace MidnightLizard.Schemes.Commander
 {
@@ -30,8 +33,12 @@ namespace MidnightLizard.Schemes.Commander
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<SCHEMES_QUEUE_CONFIG>(x => JsonConvert
+                .DeserializeObject<SCHEMES_QUEUE_CONFIG>(Configuration
+                .GetValue<string>(nameof(SCHEMES_QUEUE_CONFIG))));
+
             services.AddApiVersioning(o =>
             {
                 o.ReportApiVersions = true;
@@ -46,22 +53,20 @@ namespace MidnightLizard.Schemes.Commander
             }).AddFluentValidation(fv => fv
                 .RegisterValidatorsFromAssemblyContaining<Startup>()
                 .ImplicitlyValidateChildProperties = true);
+        }
 
-            // Autofac - last part!
-            var container = new ContainerBuilder();
-            container.Populate(services);
-
-            //container.RegisterModule<MediatorModule>();
-            container.RegisterModule<SerializationModule>();
-            container.RegisterModule<ModelBindingModule>();
-            container.RegisterModule<VersionModule>();
-
-            return new AutofacServiceProvider(container.Build());
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule<SerializationModule>();
+            builder.RegisterModule<ModelBindingModule>();
+            builder.RegisterModule<VersionModule>();
+            builder.RegisterModule<QueueModule>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseMvc();
         }
     }
