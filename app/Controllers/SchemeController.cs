@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using MidnightLizard.Schemes.Commander.Requests.PublishScheme;
 using System.Net;
-using MidnightLizard.Schemes.Commander.Requests.Queue;
+using MidnightLizard.Schemes.Commander.Infrastructure.Queue;
 
 namespace MidnightLizard.Schemes.Commander.Controllers
 {

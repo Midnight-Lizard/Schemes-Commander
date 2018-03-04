@@ -16,10 +16,10 @@ using MidnightLizard.Schemes.Commander.AutofacModules;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MidnightLizard.Schemes.Commander.Requests;
-using MidnightLizard.Schemes.Commander.Requests.ModelBinding;
-using MidnightLizard.Schemes.Commander.Requests.Queue;
+using MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding;
+using MidnightLizard.Schemes.Commander.Infrastructure.Middlewares;
+using MidnightLizard.Schemes.Commander.Infrastructure.Queue;
 using Newtonsoft.Json;
-using MidnightLizard.Schemes.Commander.Middlewares;
 
 namespace MidnightLizard.Schemes.Commander
 {

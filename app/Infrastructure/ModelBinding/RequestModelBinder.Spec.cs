@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using MidnightLizard.Schemes.Commander.Requests.ModelBinding;
+using MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding;
 using MidnightLizard.Schemes.Commander.Requests.PublishScheme;
-using MidnightLizard.Schemes.Commander.Requests.Serialization;
+using MidnightLizard.Schemes.Commander.Infrastructure.Serialization;
 using MidnightLizard.Testing.Utilities;
 using NSubstitute;
 using System;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MidnightLizard.Schemes.Commander.Requests.ModelBinding
+namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
 {
     public class RequestModelBinderSpec
     {

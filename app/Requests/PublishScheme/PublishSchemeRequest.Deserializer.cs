@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MidnightLizard.Schemes.Commander.Requests.Serialization;
+using MidnightLizard.Schemes.Commander.Infrastructure.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;

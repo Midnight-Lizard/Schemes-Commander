@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using NSubstitute;
 using Newtonsoft.Json;
 using System.Net;
-using MidnightLizard.Schemes.Commander.Requests.Queue;
+using MidnightLizard.Schemes.Commander.Infrastructure.Queue;
 using MidnightLizard.Schemes.Commander.Requests.Base;
 
 namespace MidnightLizard.Schemes.Commander.Controllers

@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using MidnightLizard.Schemes.Commander.Requests.ModelBinding;
+using MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;

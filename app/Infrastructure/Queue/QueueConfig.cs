@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MidnightLizard.Schemes.Commander.Requests.Queue
+namespace MidnightLizard.Schemes.Commander.Infrastructure.Queue
 {
     public abstract class QueueConfig
     {

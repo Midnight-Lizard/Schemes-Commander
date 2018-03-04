@@ -6,7 +6,7 @@ using Autofac.Features.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using MidnightLizard.Schemes.Commander.Requests.Base;
 
-namespace MidnightLizard.Schemes.Commander.Requests.Serialization
+namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
 {
     public interface IRequestMetaDeserializer
     {

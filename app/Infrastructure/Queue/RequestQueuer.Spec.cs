@@ -4,6 +4,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Internal;
 using MidnightLizard.Schemes.Commander.Requests.Base;
+using MidnightLizard.Schemes.Commander.Requests.PublishScheme;
 using MidnightLizard.Testing.Utilities;
 using NSubstitute;
 using System;
@@ -12,11 +13,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MidnightLizard.Schemes.Commander.Requests.Queue
+namespace MidnightLizard.Schemes.Commander.Infrastructure.Queue
 {
     public class RequestQueuerSpec : RequestQueuer<SCHEMES_QUEUE_CONFIG>
     {
-        private readonly Request testRequest = PublishScheme.PublishSchemeRequestSpec.CorrectPublishSchemeRequest;
+        private readonly Request testRequest = PublishSchemeRequestSpec.CorrectPublishSchemeRequest;
         private readonly Message<string, string> errorMessage =
             new Message<string, string>("", 0, 0, "", "", new Timestamp(),
                 new Error(ErrorCode.Unknown, "test"));

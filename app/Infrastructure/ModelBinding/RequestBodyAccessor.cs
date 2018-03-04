@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace MidnightLizard.Schemes.Commander.Requests.ModelBinding
+namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
 {
     public class RequestBodyAccessor
     {

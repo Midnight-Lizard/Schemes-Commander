@@ -7,7 +7,7 @@ using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
-namespace MidnightLizard.Schemes.Commander.Middlewares
+namespace MidnightLizard.Schemes.Commander.Infrastructure.Middlewares
 {
     public class ExceptionMiddleware
     {

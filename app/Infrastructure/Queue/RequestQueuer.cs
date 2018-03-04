@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MidnightLizard.Schemes.Commander.Requests.Queue
+namespace MidnightLizard.Schemes.Commander.Infrastructure.Queue
 {
     public interface IRequestQueuer<TQueueConfig>
         where TQueueConfig : QueueConfig
