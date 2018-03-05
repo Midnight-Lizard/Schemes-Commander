@@ -12,9 +12,12 @@ using Microsoft.AspNetCore.Http;
 using MidnightLizard.Schemes.Commander.Requests.PublishScheme;
 using System.Net;
 using MidnightLizard.Schemes.Commander.Infrastructure.Queue;
+using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MidnightLizard.Schemes.Commander.Controllers
 {
+    //[Authorize]
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
     [ApiVersion("1.2")]
@@ -24,6 +27,7 @@ namespace MidnightLizard.Schemes.Commander.Controllers
     {
         protected readonly ILogger logger;
         protected readonly IRequestQueuer<SCHEMES_QUEUE_CONFIG> requestQueuer;
+        protected readonly UserId userId;
 
         public SchemeController(
             ILogger<SchemeController> logger,
@@ -31,60 +35,39 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         {
             this.logger = logger;
             this.requestQueuer = requestQueuer;
+            //this.userId = new UserId(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+            // TODO: Get real user id!
+            this.userId = new UserId("none");
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Command([FromBody]Dictionary<string, string> obj)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var msg = JsonConvert.SerializeObject(obj);
-        //        using (var producer = new Producer<string, string>(
-        //               new Dictionary<string, object>() {
-        //               { "group.id", "schemes-commander" },
-        //               { "bootstrap.servers", "bootstrap.kafka:9092" }
-        //               },
-        //               new StringSerializer(Encoding.UTF8),
-        //               new StringSerializer(Encoding.UTF8)))
-        //        {
-        //            // var handler = new DeliveryHandler(logger);
-        //            // producer.OnError += handler.HandleError;
-        //            var result = await producer.ProduceAsync(obj["topic"], obj["color"], msg);
-        //            // producer.Flush(TimeSpan.FromSeconds(1));
-        //            if (result.Error.HasError)
-        //            {
-        //                return BadRequest(result.Error.Reason);
-        //            }
-        //            else
-        //            {
-        //                return Accepted(result);
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-        //}
-
-        [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> Publish(PublishSchemeRequest request)
+        [HttpPost]
+        public async Task<IActionResult> Publish([FromBody] PublishSchemeRequest request)
         {
             if (ModelState.IsValid)
             {
-                await this.requestQueuer.QueueRequest(request);
-                return Accepted();
+                await this.requestQueuer.QueueRequest(request, this.userId);
+                return Accepted(request.Id);
             }
             return BadRequest(ModelState);
         }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> Unpublish(Guid id)
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [HttpDelete("{" + nameof(UnpublishSchemeRequest.AggregateId) + "}")]
+        public async Task<IActionResult> Unpublish(
+            [FromRoute(Name = nameof(UnpublishSchemeRequest.AggregateId))]
+            UnpublishSchemeRequest request)
         {
-            return Ok();
+            if (ModelState.IsValid)
+            {
+                await this.requestQueuer.QueueRequest(request, this.userId);
+                return Accepted(request.Id);
+            }
+            return BadRequest(ModelState);
         }
     }
 }

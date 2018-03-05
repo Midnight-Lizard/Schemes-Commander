@@ -8,27 +8,26 @@ using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
 {
-    public class PublishSchemeRequestSpec
+    public class UnpublishSchemeRequestSpec
     {
-        public static PublishSchemeRequest CorrectPublishSchemeRequest
+        public static UnpublishSchemeRequest CorrectUnpublishSchemeRequest
         {
-            get => new PublishSchemeRequest
+            get => new UnpublishSchemeRequest
             {
                 AggregateId = Guid.NewGuid(),
-                Id = Guid.NewGuid(),
-                ColorScheme = ColorSchemeSpec.CorrectColorScheme
+                Id = Guid.NewGuid()
             };
         }
 
         public class ValidatorSpec
         {
-            private readonly PublishSchemeRequestValidator validator = new PublishSchemeRequestValidator();
+            private readonly UnpublishSchemeRequestValidator validator = new UnpublishSchemeRequestValidator();
 
             [It(nameof(PublishSchemeRequestValidator))]
             public void Should_succeed_with_correct_request()
             {
                 validator.ShouldNotHaveValidationErrorFor(x => x as object,
-                    CorrectPublishSchemeRequest);
+                    CorrectUnpublishSchemeRequest);
             }
 
             [It(nameof(PublishSchemeRequestValidator))]
@@ -43,18 +42,6 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
             {
                 validator.ShouldNotHaveValidationErrorFor(x => x.Id, Guid.NewGuid());
                 validator.ShouldNotHaveValidationErrorFor(x => x.AggregateId, Guid.NewGuid());
-            }
-
-            [It(nameof(PublishSchemeRequestValidator))]
-            public void Should_fail_when_ColorScheme_is_null()
-            {
-                validator.ShouldHaveValidationErrorFor(x => x.ColorScheme, null as ColorScheme);
-            }
-
-            [It(nameof(PublishSchemeRequestValidator))]
-            public void Should_succeed_when_ColorScheme_is_not_null()
-            {
-                validator.ShouldNotHaveValidationErrorFor(x => x.ColorScheme, new ColorScheme());
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using MidnightLizard.Schemes.Commander.Requests.PublishScheme;
+using MidnightLizard.Schemes.Commander.Requests.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
     {
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
-            if (context.Metadata.ModelType == typeof(PublishSchemeRequest))
+            if (typeof(Request).IsAssignableFrom(context.Metadata.ModelType))
             {
                 return new BinderTypeModelBinder(typeof(RequestModelBinder));
             }

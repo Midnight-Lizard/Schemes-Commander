@@ -3,6 +3,8 @@ using Confluent.Kafka.Serialization;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Internal;
+using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
+using MidnightLizard.Schemes.Commander.Infrastructure.Serialization;
 using MidnightLizard.Schemes.Commander.Requests.Base;
 using MidnightLizard.Schemes.Commander.Requests.PublishScheme;
 using MidnightLizard.Testing.Utilities;
@@ -18,6 +20,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Queue
     public class RequestQueuerSpec : RequestQueuer<SCHEMES_QUEUE_CONFIG>
     {
         private readonly Request testRequest = PublishSchemeRequestSpec.CorrectPublishSchemeRequest;
+        private readonly UserId testUserId = new UserId("test-user-id");
         private readonly Message<string, string> errorMessage =
             new Message<string, string>("", 0, 0, "", "", new Timestamp(),
                 new Error(ErrorCode.Unknown, "test"));
@@ -31,7 +34,8 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Queue
                     ["bootstrap.servers"] = "test:123"
                 }
             },
-            Substitute.For<ILogger<RequestQueuer<SCHEMES_QUEUE_CONFIG>>>())
+            Substitute.For<ILogger<RequestQueuer<SCHEMES_QUEUE_CONFIG>>>(),
+            Substitute.For<IRequestSerializer>())
         {
             this.producer = Substitute.For<ISerializingProducer<string, string>>();
             this.producer.ProduceAsync("test", this.testRequest.AggregateId.ToString(), Arg.Any<string>())
@@ -43,7 +47,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Queue
             [It(nameof(QueueRequest))]
             public async Task Should_call_KafkaProducer__ProduceAsync()
             {
-                await this.QueueRequest(this.testRequest);
+                await this.QueueRequest(this.testRequest, this.testUserId);
 
                 await this.producer.Received(1).ProduceAsync("test", this.testRequest.AggregateId.ToString(), Arg.Any<string>());
             }
@@ -54,7 +58,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Queue
                 this.producer.ProduceAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
                     .Returns(errorMessage);
 
-                Func<Task> act = async () => await this.QueueRequest(this.testRequest);
+                Func<Task> act = async () => await this.QueueRequest(this.testRequest, this.testUserId);
 
                 act.Should().Throw<ApplicationException>();
             }
@@ -67,7 +71,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Queue
 
                 try
                 {
-                    await this.QueueRequest(this.testRequest);
+                    await this.QueueRequest(this.testRequest, this.testUserId);
                 }
                 catch { }
 

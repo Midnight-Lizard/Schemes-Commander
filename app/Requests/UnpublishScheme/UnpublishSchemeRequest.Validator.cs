@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
 {
-    public class PublishSchemeRequestValidator : AbstractValidator<PublishSchemeRequest>
+    public class UnpublishSchemeRequestValidator : AbstractValidator<UnpublishSchemeRequest>
     {
-        public PublishSchemeRequestValidator()
+        public UnpublishSchemeRequestValidator()
         {
             Include(new RequestValidator());
-            RuleFor(r => r.ColorScheme).NotNull();
         }
     }
 }

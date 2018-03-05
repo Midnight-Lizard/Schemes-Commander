@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using MidnightLizard.Schemes.Commander.Infrastructure.Serialization;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace MidnightLizard.Schemes.Commander.AutofacModules
                 .WithMetadata(t => new Dictionary<string, object>
                 {
                     [nameof(Type)] = t.GetInterfaces().First().GetGenericArguments()[0],
-                    [nameof(Version)] = t.GetCustomAttribute<ApiVersionAttribute>().Versions
+                    [nameof(Version)] = t.GetCustomAttribute<ApiVersionsBaseAttribute>().Versions
                 });
         }
     }

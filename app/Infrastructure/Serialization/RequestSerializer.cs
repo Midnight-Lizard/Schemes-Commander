@@ -1,4 +1,5 @@
-﻿using MidnightLizard.Schemes.Commander.Requests.Base;
+﻿using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
+using MidnightLizard.Schemes.Commander.Requests.Base;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
 {
     public interface IRequestSerializer
     {
-        string Serialize(Request request);
+        string Serialize(Request request, UserId userId);
     }
 
     public class RequestSerializer : IRequestSerializer
@@ -28,13 +29,14 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
             this.version = version;
         }
 
-        public string Serialize(Request request)
+        public string Serialize(Request request, UserId userId)
         {
             return JsonConvert.SerializeObject(new
             {
                 CorrelationId = request.Id,
                 Type = request.GetType().Name,
                 Version = this.version.ToString(),
+                UserId = userId.Value,
                 Payload = request
             }, serializerSettings);
         }

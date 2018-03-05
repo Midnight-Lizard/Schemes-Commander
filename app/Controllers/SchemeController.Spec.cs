@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using System.Net;
 using MidnightLizard.Schemes.Commander.Infrastructure.Queue;
 using MidnightLizard.Schemes.Commander.Requests.Base;
+using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
 
 namespace MidnightLizard.Schemes.Commander.Controllers
 {
@@ -51,7 +52,7 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         public class PublishSpec : SchemeControllerSpec
         {
             [It(nameof(SchemeController.Publish))]
-            public async Task Should_successfuly_process_correct_request()
+            public async Task Should_successfuly_process_correct_PublishSchemeRequest()
             {
                 var json = JsonConvert.SerializeObject(PublishSchemeRequestSpec.CorrectPublishSchemeRequest);
                 HttpContent jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
@@ -59,16 +60,42 @@ namespace MidnightLizard.Schemes.Commander.Controllers
 
                 result.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                await this.testQueuer.Received(1).QueueRequest(Arg.Any<Request>());
+                await this.testQueuer.Received(1).QueueRequest(Arg.Any<Request>(), Arg.Any<UserId>());
 
             }
 
             [It(nameof(SchemeController.Publish))]
-            public async Task Should_return_BadRequest_response_when_request_is_incorrect()
+            public async Task Should_return_BadRequest_response_when_PublishSchemeRequest_is_incorrect()
             {
                 var json = JsonConvert.SerializeObject(new PublishSchemeRequest());
                 HttpContent jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
                 var result = await this.testClient.PostAsync("scheme", jsonContent);
+
+                result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            }
+        }
+
+        public class UnpublishSpec : SchemeControllerSpec
+        {
+            [It(nameof(SchemeController.Unpublish))]
+            public async Task Should_successfuly_process_correct_UnpublishSchemeRequest()
+            {
+                var testGuid = Guid.NewGuid();
+
+                var result = await this.testClient.DeleteAsync($"scheme/{testGuid}");
+
+                result.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                await this.testQueuer.Received(1).QueueRequest(
+                    Arg.Is<Request>(r => r.AggregateId == testGuid),
+                    Arg.Any<UserId>());
+
+            }
+
+            [It(nameof(SchemeController.Unpublish))]
+            public async Task Should_return_BadRequest_response_when_UnpublishSchemeRequest_is_incorrect()
+            {
+                var result = await this.testClient.DeleteAsync("scheme/123");
 
                 result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             }

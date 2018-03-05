@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
 {
-    public class PublishSchemeRequest : Request
+    public class UnpublishSchemeRequest : Request
     {
-        public ColorScheme ColorScheme { get; set; }
     }
 }

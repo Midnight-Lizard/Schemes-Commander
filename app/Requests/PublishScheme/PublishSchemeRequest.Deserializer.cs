@@ -52,7 +52,7 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
     }
 
     [ApiVersion("1.3")]
-    public class PublishSchemeRequestDeserializer_Latest : GenericRequestDeserializer<PublishSchemeRequest>
+    public class PublishSchemeRequestDeserializer_Latest : JsonRequestDeserializer<PublishSchemeRequest>
     {
     }
 }

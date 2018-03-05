@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
 
 namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
 {
@@ -29,13 +30,18 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
             this.requestMetaDeserializer = Substitute.For<IRequestMetaDeserializer>();
             this.versionAccessor = Substitute.For<RequestVersionAccessor>();
             this.bodyAccessor = Substitute.For<RequestBodyAccessor>();
-            this.modelBinder = new RequestModelBinder(this.requestMetaDeserializer, this.versionAccessor, this.bodyAccessor);
+            this.modelBinder = new RequestModelBinder(
+                this.requestMetaDeserializer,
+                this.versionAccessor,
+                this.bodyAccessor);
             this.context = Substitute.For<ModelBindingContext>();
 
             this.context.ModelType.Returns(typeof(PublishSchemeRequest));
+            this.context.ModelState = new ModelStateDictionary();
+            this.context.BindingSource = BindingSource.Body;
+
             this.versionAccessor.GetApiVersion(this.context).Returns(this.testApiVersion);
             this.bodyAccessor.ReadAsync(this.context).Returns(this.testBody);
-            this.context.ModelState = new ModelStateDictionary();
         }
 
         [It(nameof(RequestModelBinder.BindModelAsync))]
@@ -82,7 +88,8 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
         [It(nameof(RequestModelBinder.BindModelAsync))]
         public async Task Should_set_ModelBindingContext__Result_to_Fail_when_Exception()
         {
-            this.requestMetaDeserializer.Deserialize(typeof(PublishSchemeRequest), this.testApiVersion, this.testBody)
+            this.requestMetaDeserializer
+                .Deserialize(typeof(PublishSchemeRequest), this.testApiVersion, this.testBody)
                 .Returns(x => throw new Exception("test"));
 
             await this.modelBinder.BindModelAsync(this.context);
@@ -94,7 +101,8 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
         public async Task Should_add_Error_to_ModelState_when_Exception_raised()
         {
             var testErrorMessage = "test error message";
-            this.requestMetaDeserializer.Deserialize(typeof(PublishSchemeRequest), this.testApiVersion, this.testBody)
+            this.requestMetaDeserializer
+                .Deserialize(typeof(PublishSchemeRequest), this.testApiVersion, this.testBody)
                 .Returns(x => throw new Exception(testErrorMessage));
 
             await this.modelBinder.BindModelAsync(this.context);

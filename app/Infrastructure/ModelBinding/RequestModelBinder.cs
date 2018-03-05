@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
 using MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding;
 using MidnightLizard.Schemes.Commander.Infrastructure.Serialization;
 using System;
@@ -27,13 +28,24 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
 
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            var version = this.requestVersionAccessor.GetApiVersion(bindingContext);
-            var modelType = bindingContext.ModelType;
-            var requestJson = await this.requestBodyAccessor.ReadAsync(bindingContext);
-
             try
             {
-                var request = this.requestSerializer.Deserialize(modelType, version, requestJson);
+                var version = this.requestVersionAccessor.GetApiVersion(bindingContext);
+                var modelType = bindingContext.ModelType;
+
+                string requestData = "";
+
+                if (bindingContext.BindingSource == BindingSource.Body)
+                {
+                    requestData = await this.requestBodyAccessor.ReadAsync(bindingContext);
+                }
+                else
+                {
+                    requestData = bindingContext.ValueProvider
+                        .GetValue(bindingContext.BinderModelName).FirstValue;
+                }
+
+                var request = this.requestSerializer.Deserialize(modelType, version, requestData);
 
                 bindingContext.Result = ModelBindingResult.Success(request);
             }
