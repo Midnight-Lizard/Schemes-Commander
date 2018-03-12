@@ -16,7 +16,7 @@ namespace MidnightLizard.Schemes.Commander
 
         public override string ToString()
         {
-            return Value?.ToString();
+            return Value.ToString();
         }
 
         public static AppVersion Latest { get; } = new AppVersion("1.3.0");

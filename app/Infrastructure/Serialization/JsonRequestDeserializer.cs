@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
 {
-    public class JsonRequestDeserializer<TRequest> : BaseRequestDeserializer<TRequest>
+    public abstract class JsonRequestDeserializer<TRequest> : BaseRequestDeserializer<TRequest>
         where TRequest : Request
     {
         protected override TRequest DeserializeRequest(string requestJson)

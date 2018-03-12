@@ -21,13 +21,14 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
         public virtual TRequest Deserialize(string requestData)
         {
             var request = DeserializeRequest(requestData);
-            AdvanceToTheLatestVersion(request);
+            StartAdvancingToTheLatestVersion(request);
             request.Id = request.Id == default ? Guid.NewGuid() : request.Id;
             return request;
         }
 
         protected abstract TRequest DeserializeRequest(string data);
 
+        public abstract void StartAdvancingToTheLatestVersion(TRequest message);
         protected virtual void AdvanceToTheLatestVersion(TRequest request) { }
     }
 }

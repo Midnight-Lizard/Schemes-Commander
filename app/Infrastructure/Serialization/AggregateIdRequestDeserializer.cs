@@ -11,6 +11,10 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
     public class AggregateIdRequestDeserializer<TRequest> : BaseRequestDeserializer<TRequest>
         where TRequest : Request, new()
     {
+        public override void StartAdvancingToTheLatestVersion(TRequest message)
+        {
+        }
+
         protected override TRequest DeserializeRequest(string aggregateId)
         {
             return new TRequest
