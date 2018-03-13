@@ -19,6 +19,8 @@ using System.Net;
 using MidnightLizard.Schemes.Commander.Infrastructure.Queue;
 using MidnightLizard.Schemes.Commander.Requests.Base;
 using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
+using Microsoft.AspNetCore.Builder;
+using MidnightLizard.Schemes.Commander.Infrastructure.Middlewares;
 
 namespace MidnightLizard.Schemes.Commander.Controllers
 {
@@ -44,7 +46,7 @@ namespace MidnightLizard.Schemes.Commander.Controllers
                             ["bootstrap.servers"] = "test:123"
                         }
                     }))
-                .UseStartup<Startup>());
+                .UseStartup<StartupStub>());
             this.testClient = this.testServer.CreateClient();
             this.testClient.DefaultRequestHeaders.Add("version", "1.3");
         }

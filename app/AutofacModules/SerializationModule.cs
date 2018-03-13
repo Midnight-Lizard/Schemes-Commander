@@ -17,6 +17,9 @@ namespace MidnightLizard.Schemes.Commander.AutofacModules
             builder.RegisterType<RequestMetaDeserializer>()
                 .AsImplementedInterfaces();
 
+            builder.RegisterType<RequestSerializer>()
+                .AsImplementedInterfaces();
+
             builder.RegisterAssemblyTypes(typeof(SerializationModule).GetTypeInfo().Assembly)
                 .AsClosedTypesOf(typeof(IRequestDeserializer<>))
                 .As<IRequestDeserializer>()

@@ -20,6 +20,8 @@ using MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding;
 using MidnightLizard.Schemes.Commander.Infrastructure.Middlewares;
 using MidnightLizard.Schemes.Commander.Infrastructure.Queue;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using IdentityServer4.AccessTokenValidation;
 
 namespace MidnightLizard.Schemes.Commander
 {
@@ -47,12 +49,30 @@ namespace MidnightLizard.Schemes.Commander
                     new QueryStringApiVersionReader());
             });
 
+            services.AddCors(x => x.AddPolicy("all", p => p
+                 .AllowAnyHeader()
+                 .AllowAnyMethod()
+                 .AllowAnyOrigin()));
+
             services.AddMvc(opt =>
             {
                 opt.ModelBinderProviders.Insert(0, new RequestModelBinderProvider());
             }).AddFluentValidation(fv => fv
                 .RegisterValidatorsFromAssemblyContaining<Startup>()
                 .ImplicitlyValidateChildProperties = true);
+
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddIdentityServerAuthentication(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+
+                    // base-address of your identityserver
+                    options.Authority = Configuration
+                        .GetValue<string>("IDENTITY_URL");
+
+                    // name of the API resource
+                    options.ApiName = "schemes-commander";
+                });
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -64,8 +84,10 @@ namespace MidnightLizard.Schemes.Commander
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors("all");
+            app.UseAuthentication();
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseMvc();
         }

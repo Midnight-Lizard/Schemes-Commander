@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MidnightLizard.Schemes.Commander.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
     [ApiVersion("1.2")]
@@ -27,7 +27,19 @@ namespace MidnightLizard.Schemes.Commander.Controllers
     {
         protected readonly ILogger logger;
         protected readonly IRequestQueuer<SCHEMES_QUEUE_CONFIG> requestQueuer;
-        protected readonly UserId userId;
+
+        protected UserId GetUserId()
+        {
+            if (User != null)
+            {
+                var subClaim = User.FindFirst("sub");
+                if (subClaim != null)
+                {
+                    return new UserId(subClaim.Value);
+                }
+            }
+            throw new UnauthorizedAccessException();
+        }
 
         public SchemeController(
             ILogger<SchemeController> logger,
@@ -35,9 +47,6 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         {
             this.logger = logger;
             this.requestQueuer = requestQueuer;
-            //this.userId = new UserId(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
-            // TODO: Get real user id!
-            this.userId = new UserId("none");
         }
 
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
@@ -48,7 +57,7 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         {
             if (ModelState.IsValid)
             {
-                await this.requestQueuer.QueueRequest(request, this.userId);
+                await this.requestQueuer.QueueRequest(request, this.GetUserId());
                 return Accepted(request.Id);
             }
             return BadRequest(ModelState);
@@ -64,7 +73,7 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         {
             if (ModelState.IsValid)
             {
-                await this.requestQueuer.QueueRequest(request, this.userId);
+                await this.requestQueuer.QueueRequest(request, this.GetUserId());
                 return Accepted(request.Id);
             }
             return BadRequest(ModelState);
