@@ -3,10 +3,10 @@
 #===========================================#
 FROM microsoft/aspnetcore-build:2-jessie as dotnet-build
 ARG DOTNET_CONFIG=Release
-COPY *.csproj /build/
+COPY app/*.csproj /build/
 WORKDIR /build
 RUN dotnet restore
-COPY . .
+COPY app/ .
 RUN dotnet publish -c ${DOTNET_CONFIG} -o ./results
 
 #===========================================#
