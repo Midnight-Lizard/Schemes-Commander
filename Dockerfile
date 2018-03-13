@@ -3,11 +3,19 @@
 #===========================================#
 FROM microsoft/aspnetcore-build:2-jessie as dotnet-build
 ARG DOTNET_CONFIG=Release
-COPY app/*.csproj /build/
+COPY /app/*.csproj /build/
 WORKDIR /build
 RUN dotnet restore
-COPY app/ .
+COPY /app/ .
 RUN dotnet publish -c ${DOTNET_CONFIG} -o ./results
+
+#===========================================#
+#				DOTNET	TEST				#
+#===========================================#
+FROM microsoft/aspnetcore-build:2-jessie as dotnet-test
+WORKDIR /test
+COPY --from=dotnet-build /build .
+RUN dotnet test -c Test
 
 #===========================================#
 #				IMAGE	BUILD				#

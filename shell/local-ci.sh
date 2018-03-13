@@ -14,4 +14,7 @@ docker build -t $IMAGE \
     ../
 kubectl config set-context minikube
 docker push $IMAGE
-./helm-deploy.sh -i $IMAGE -r $PROJ -c ../kube/$PROJ -s env.ASPNETCORE_ENVIRONMENT=Development
+./helm-deploy.sh -i $IMAGE -r $PROJ -c ../kube/$PROJ \
+    -s env.ASPNETCORE_ENVIRONMENT=Development \
+    -s env.IDENTITY_URL=http://localhost:7002/ \
+    -s env.SCHEMES_QUEUE_CONFIG="{\"TopicName\":\"schemes-requests-a\",\"ProducerSettings\":{\"bootstrap.servers\":\"bootstrap.kafka:9092\"}}"

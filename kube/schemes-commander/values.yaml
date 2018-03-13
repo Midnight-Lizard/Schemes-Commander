@@ -13,10 +13,6 @@ service:
   externalPort: 80
   internalPort: 80
 env:
-  ASPNETCORE_ENVIRONMENT: Production
-  ENV: prod
-  NODE_ENV: production
-  PORTAL_URL: http://midnight-lizard.online
   IDENTITY_URL: http://identity.midnight-lizard.online
   SCHEMES_QUEUE_CONFIG: |-
     {
