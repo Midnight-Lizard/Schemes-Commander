@@ -14,10 +14,12 @@ using System.Net;
 using MidnightLizard.Schemes.Commander.Infrastructure.Queue;
 using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using MidnightLizard.Schemes.Commander.Infrastructure.ActionFilters;
 
 namespace MidnightLizard.Schemes.Commander.Controllers
 {
     [Authorize]
+    [ValidateModelState]
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
     [ApiVersion("1.2")]
@@ -55,12 +57,8 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         [HttpPost]
         public async Task<IActionResult> Publish([FromBody] PublishSchemeRequest request)
         {
-            if (ModelState.IsValid)
-            {
-                await this.requestQueuer.QueueRequest(request, this.GetUserId());
-                return Accepted(request.Id);
-            }
-            return BadRequest(ModelState);
+            await this.requestQueuer.QueueRequest(request, this.GetUserId());
+            return Accepted(request.Id);
         }
 
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
@@ -71,12 +69,8 @@ namespace MidnightLizard.Schemes.Commander.Controllers
             [FromRoute(Name = nameof(UnpublishSchemeRequest.AggregateId))]
             UnpublishSchemeRequest request)
         {
-            if (ModelState.IsValid)
-            {
-                await this.requestQueuer.QueueRequest(request, this.GetUserId());
-                return Accepted(request.Id);
-            }
-            return BadRequest(ModelState);
+            await this.requestQueuer.QueueRequest(request, this.GetUserId());
+            return Accepted(request.Id);
         }
     }
 }
