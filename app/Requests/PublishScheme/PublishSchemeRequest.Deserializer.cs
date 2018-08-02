@@ -36,7 +36,7 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
     }
 
     [ApiVersion("1.2")]
-    public class PublishSchemeRequestDeserializer_v1_2 : PublishSchemeRequestDeserializer_Latest
+    public class PublishSchemeRequestDeserializer_v1_2 : PublishSchemeRequestDeserializer_v1_3
     {
         public override void StartAdvancingToTheLatestVersion(PublishSchemeRequest message)
         {
@@ -57,8 +57,8 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
         }
     }
 
-    [ApiVersion("1.3")]
-    public class PublishSchemeRequestDeserializer_Latest : JsonRequestDeserializer<PublishSchemeRequest>
+    [AdvertiseApiVersions("1.3")]
+    public class PublishSchemeRequestDeserializer_v1_3 : JsonRequestDeserializer<PublishSchemeRequest>
     {
         public override void StartAdvancingToTheLatestVersion(PublishSchemeRequest message)
         {
