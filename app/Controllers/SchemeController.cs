@@ -21,9 +21,6 @@ namespace MidnightLizard.Schemes.Commander.Controllers
     [Authorize]
     [ValidateModelState]
     [ApiVersion("1.0")]
-    [ApiVersion("1.1")]
-    [ApiVersion("1.2")]
-    [ApiVersion("1.3")]
     [Route("[controller]")]
     public class SchemeController : Controller
     {

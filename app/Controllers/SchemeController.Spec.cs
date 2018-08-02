@@ -48,7 +48,7 @@ namespace MidnightLizard.Schemes.Commander.Controllers
                     }))
                 .UseStartup<StartupStub>());
             this.testClient = this.testServer.CreateClient();
-            this.testClient.DefaultRequestHeaders.Add("version", "1.3");
+            this.testClient.DefaultRequestHeaders.Add("version", "1.0");
         }
 
         public class PublishSpec : SchemeControllerSpec
