@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MidnightLizard.Schemes.Commander.Infrastructure.Serialization;
+﻿using MidnightLizard.Schemes.Commander.Infrastructure.Serialization;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
 {
-    [ApiVersion("1.0")]
+    [SchemaVersion("1.0")]
     public class PublishSchemeRequestDeserializer_v1_0 : PublishSchemeRequestDeserializer_v1_1
     {
         public override void StartAdvancingToTheLatestVersion(PublishSchemeRequest message)
@@ -16,7 +12,7 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
         }
     }
 
-    [ApiVersion("1.1")]
+    [SchemaVersion("1.1")]
     public class PublishSchemeRequestDeserializer_v1_1 : PublishSchemeRequestDeserializer_v1_2
     {
         public override void StartAdvancingToTheLatestVersion(PublishSchemeRequest message)
@@ -35,7 +31,7 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
         }
     }
 
-    [ApiVersion("1.2")]
+    [SchemaVersion("1.2")]
     public class PublishSchemeRequestDeserializer_v1_2 : PublishSchemeRequestDeserializer_v1_3
     {
         public override void StartAdvancingToTheLatestVersion(PublishSchemeRequest message)
@@ -57,7 +53,7 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
         }
     }
 
-    [AdvertiseApiVersions("1.3")]
+    [SchemaVersion("1.3")]
     public class PublishSchemeRequestDeserializer_v1_3 : JsonRequestDeserializer<PublishSchemeRequest>
     {
         public override void StartAdvancingToTheLatestVersion(PublishSchemeRequest message)

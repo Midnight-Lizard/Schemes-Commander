@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
 {
-    [AdvertiseApiVersions("1.0", "1.1", "1.2", "1.3")]
+    [SchemaVersion("*")]
     public class UnpublishSchemeRequestDeserializer_Latest : AggregateIdRequestDeserializer<UnpublishSchemeRequest>
     {
     }

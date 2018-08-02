@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using MidnightLizard.Schemes.Commander.Infrastructure.Serialization;
+using MidnightLizard.Schemes.Commander.Requests.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +26,13 @@ namespace MidnightLizard.Schemes.Commander.AutofacModules
                 .As<IRequestDeserializer>()
                 .WithMetadata(t => new Dictionary<string, object>
                 {
-                    [nameof(Type)] = t.GetInterfaces().First().GetGenericArguments()[0],
-                    [nameof(Version)] = t.GetCustomAttribute<ApiVersionsBaseAttribute>().Versions
+                    [nameof(Type)] = t
+                        .GetInterface(typeof(IRequestDeserializer<>).FullName)
+                        .GetGenericArguments().First(),
+
+                    [nameof(SchemaVersionAttribute.VersionRange)] = t
+                        .GetCustomAttribute<SchemaVersionAttribute>()
+                        .VersionRange
                 });
         }
     }

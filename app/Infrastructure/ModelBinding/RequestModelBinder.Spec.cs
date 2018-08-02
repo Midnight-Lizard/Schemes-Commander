@@ -18,17 +18,17 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
     public class RequestModelBinderSpec
     {
         private readonly IRequestMetaDeserializer requestMetaDeserializer;
-        private readonly RequestVersionAccessor versionAccessor;
+        private readonly RequestSchemaVersionAccessor versionAccessor;
         private readonly RequestBodyAccessor bodyAccessor;
         private readonly RequestModelBinder modelBinder;
         private readonly ModelBindingContext context;
-        private readonly ApiVersion testApiVersion = new ApiVersion(1, 3);
+        private readonly AppVersion testSchemaVersion = new AppVersion("1.3.0");
         private readonly string testBody = "test";
 
         public RequestModelBinderSpec()
         {
             this.requestMetaDeserializer = Substitute.For<IRequestMetaDeserializer>();
-            this.versionAccessor = Substitute.For<RequestVersionAccessor>();
+            this.versionAccessor = Substitute.For<RequestSchemaVersionAccessor>();
             this.bodyAccessor = Substitute.For<RequestBodyAccessor>();
             this.modelBinder = new RequestModelBinder(
                 this.requestMetaDeserializer,
@@ -40,7 +40,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
             this.context.ModelState = new ModelStateDictionary();
             this.context.BindingSource = BindingSource.Body;
 
-            this.versionAccessor.GetApiVersion(this.context).Returns(this.testApiVersion);
+            this.versionAccessor.GetSchemaVersion(this.context).Returns(this.testSchemaVersion);
             this.bodyAccessor.ReadAsync(this.context).Returns(this.testBody);
         }
 
@@ -57,7 +57,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
         {
             await this.modelBinder.BindModelAsync(this.context);
 
-            this.versionAccessor.Received(1).GetApiVersion(this.context);
+            this.versionAccessor.Received(1).GetSchemaVersion(this.context);
         }
 
         [It(nameof(RequestModelBinder.BindModelAsync))]
@@ -74,7 +74,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
             await this.modelBinder.BindModelAsync(this.context);
 
             this.requestMetaDeserializer.Received(1)
-                .Deserialize(typeof(PublishSchemeRequest), this.testApiVersion, this.testBody);
+                .Deserialize(typeof(PublishSchemeRequest), this.testSchemaVersion, this.testBody);
         }
 
         [It(nameof(RequestModelBinder.BindModelAsync))]
@@ -89,7 +89,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
         public async Task Should_set_ModelBindingContext__Result_to_Fail_when_Exception()
         {
             this.requestMetaDeserializer
-                .Deserialize(typeof(PublishSchemeRequest), this.testApiVersion, this.testBody)
+                .Deserialize(typeof(PublishSchemeRequest), this.testSchemaVersion, this.testBody)
                 .Returns(x => throw new Exception("test"));
 
             await this.modelBinder.BindModelAsync(this.context);
@@ -102,7 +102,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
         {
             var testErrorMessage = "test error message";
             this.requestMetaDeserializer
-                .Deserialize(typeof(PublishSchemeRequest), this.testApiVersion, this.testBody)
+                .Deserialize(typeof(PublishSchemeRequest), this.testSchemaVersion, this.testBody)
                 .Returns(x => throw new Exception(testErrorMessage));
 
             await this.modelBinder.BindModelAsync(this.context);

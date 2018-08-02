@@ -7,6 +7,8 @@ namespace MidnightLizard.Schemes.Commander
 {
     public class AppVersion
     {
+        private AppVersion() { }
+
         public AppVersion(string version)
         {
             Value = new SemVer.Version(version);
@@ -20,5 +22,6 @@ namespace MidnightLizard.Schemes.Commander
         }
 
         public static AppVersion Latest { get; } = new AppVersion("1.3.0");
+        public static AppVersion Unspecified { get; } = new AppVersion();
     }
 }

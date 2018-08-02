@@ -1,6 +1,7 @@
 ﻿using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
 using MidnightLizard.Schemes.Commander.Requests.Base;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,9 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
             DateTimeZoneHandling = DateTimeZoneHandling.Utc,
             ContractResolver = MessageContractResolver.Default,
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+            Converters = new JsonConverter[] {
+                new StringEnumConverter(camelCaseText:true)
+            }
         };
 
         public RequestSerializer(AppVersion version)

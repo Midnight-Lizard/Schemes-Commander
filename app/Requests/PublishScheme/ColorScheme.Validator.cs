@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
@@ -53,6 +54,25 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
             RuleFor(cs => cs.buttonGraySaturation).InclusiveBetween(0, 100);
             RuleFor(cs => cs.buttonGrayHue).InclusiveBetween(0, 359);
             RuleFor(cs => cs.scrollbarSize).InclusiveBetween(0, 50);
+
+            // v9.3
+            string schemeSegment = @"(\*|http|https|ftp)",
+              hostSegment = @"(\*|(?:\*\.)?(?:[^/*]+))",
+              fileScheme = @"file://",
+              pathSegment = @"(.*)";
+            var regExp = new Regex($@"^$|^\*$|^<all_urls>$|^(?:{fileScheme}|{schemeSegment}://{hostSegment})/{pathSegment}$", RegexOptions.IgnoreCase);
+
+            RuleFor(cs => cs.includeMatches).Matches(regExp);
+            RuleFor(cs => cs.excludeMatches).Matches(regExp);
+
+            RuleFor(cs => cs.backgroundHueGravity).InclusiveBetween(0, 100);
+            RuleFor(cs => cs.buttonHueGravity).InclusiveBetween(0, 100);
+            RuleFor(cs => cs.textHueGravity).InclusiveBetween(0, 100);
+            RuleFor(cs => cs.linkHueGravity).InclusiveBetween(0, 100);
+            RuleFor(cs => cs.borderHueGravity).InclusiveBetween(0, 100);
+            RuleFor(cs => cs.scrollbarStyle).Matches("^(?:true|false)$");
+            RuleFor(cs => cs.modeAutoSwitchLimit).InclusiveBetween(0, 10000);
+            RuleFor(cs => cs.mode).IsInEnum();
         }
     }
 }

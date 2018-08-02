@@ -45,7 +45,7 @@ namespace MidnightLizard.Schemes.Commander
             {
                 o.ReportApiVersions = true;
                 o.ApiVersionReader = ApiVersionReader.Combine(
-                    new HeaderApiVersionReader("version", "api-version", "x-api-version"),
+                    new HeaderApiVersionReader("api-version", "x-api-version"),
                     new QueryStringApiVersionReader());
             });
 

@@ -7,11 +7,27 @@ using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
 {
-    public class RequestVersionAccessor
+    public class RequestSchemaVersionAccessor
     {
-        public virtual ApiVersion GetApiVersion(ModelBindingContext bindingContext)
+        private static readonly string versionKey = "schema-version";
+
+        public virtual AppVersion GetSchemaVersion(ModelBindingContext bindingContext)
         {
-            return bindingContext.HttpContext.GetRequestedApiVersion();
+            var versionValue = string.Empty;
+            if (bindingContext.HttpContext.Request.Query.Keys.Contains(versionKey))
+            {
+                versionValue = bindingContext.HttpContext.Request.Query[versionKey];
+            }
+            if (versionValue == string.Empty &&
+                bindingContext.HttpContext.Request.Headers.Keys.Contains(versionKey))
+            {
+                versionValue = bindingContext.HttpContext.Request.Headers[versionKey];
+            }
+            if (versionValue != string.Empty)
+            {
+                return new AppVersion(versionValue);
+            }
+            return AppVersion.Unspecified;
         }
     }
 }

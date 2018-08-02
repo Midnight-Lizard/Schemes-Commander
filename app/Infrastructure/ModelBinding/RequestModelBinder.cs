@@ -13,25 +13,24 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
     public class RequestModelBinder : IModelBinder
     {
         protected readonly IRequestMetaDeserializer requestSerializer;
-        protected readonly RequestVersionAccessor requestVersionAccessor;
+        protected readonly RequestSchemaVersionAccessor requestSchemaVersionAccessor;
         protected readonly RequestBodyAccessor requestBodyAccessor;
 
         public RequestModelBinder(
             IRequestMetaDeserializer requestSerializer,
-            RequestVersionAccessor requestVersionAccessor,
+            RequestSchemaVersionAccessor requestVersionAccessor,
             RequestBodyAccessor requestBodyAccessor)
         {
             this.requestBodyAccessor = requestBodyAccessor;
             this.requestSerializer = requestSerializer;
-            this.requestVersionAccessor = requestVersionAccessor;
+            this.requestSchemaVersionAccessor = requestVersionAccessor;
         }
 
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
             try
             {
-                var version = this.requestVersionAccessor.GetApiVersion(bindingContext);
-                var modelType = bindingContext.ModelType;
+                var schemaVersion = this.requestSchemaVersionAccessor.GetSchemaVersion(bindingContext);
 
                 string requestData = "";
 
@@ -45,7 +44,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
                         .GetValue(bindingContext.BinderModelName).FirstValue;
                 }
 
-                var request = this.requestSerializer.Deserialize(modelType, version, requestData);
+                var request = this.requestSerializer.Deserialize(bindingContext.ModelType, schemaVersion, requestData);
 
                 bindingContext.Result = ModelBindingResult.Success(request);
             }

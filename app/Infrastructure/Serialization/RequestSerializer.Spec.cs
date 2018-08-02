@@ -2,6 +2,8 @@
 using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
 using MidnightLizard.Schemes.Commander.Requests.PublishScheme;
 using MidnightLizard.Testing.Utilities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,10 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
 
         public RequestSerializerSpec()
         {
+            var correctColorSchemeJson = JsonConvert.SerializeObject(
+                ColorSchemeSpec.CorrectColorScheme, new[] {
+                new StringEnumConverter(true)
+            });
             this.serialiser = new RequestSerializer(AppVersion.Latest);
             snapshot =
                 $@"{{" +
@@ -29,7 +35,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
                     $@"{{" +
                         $@"""AggregateId"":""{aggregateId}""," +
                         $@"""Id"":""{id}""," +
-                        $@"""ColorScheme"":{{""colorSchemeId"":""almondRipe"",""colorSchemeName"":""Almond Ripe"",""runOnThisSite"":true,""restoreColorsOnCopy"":false,""blueFilter"":5,""useDefaultSchedule"":true,""scheduleStartHour"":0,""scheduleFinishHour"":24,""backgroundSaturationLimit"":80,""backgroundContrast"":50,""backgroundLightnessLimit"":11,""backgroundGraySaturation"":30,""backgroundGrayHue"":36,""backgroundReplaceAllHues"":false,""textSaturationLimit"":90,""textContrast"":60,""textLightnessLimit"":80,""textGraySaturation"":10,""textGrayHue"":88,""textSelectionHue"":36,""textReplaceAllHues"":false,""linkSaturationLimit"":80,""linkContrast"":50,""linkLightnessLimit"":70,""linkDefaultSaturation"":60,""linkDefaultHue"":88,""linkVisitedHue"":122,""linkReplaceAllHues"":true,""borderSaturationLimit"":80,""borderContrast"":30,""borderLightnessLimit"":50,""borderGraySaturation"":20,""borderGrayHue"":54,""borderReplaceAllHues"":false,""imageLightnessLimit"":80,""imageSaturationLimit"":90,""backgroundImageLightnessLimit"":40,""backgroundImageSaturationLimit"":80,""scrollbarSaturationLimit"":20,""scrollbarContrast"":0,""scrollbarLightnessLimit"":40,""scrollbarGrayHue"":45,""buttonSaturationLimit"":90,""buttonContrast"":50,""buttonLightnessLimit"":30,""buttonGraySaturation"":30,""buttonGrayHue"":40,""buttonReplaceAllHues"":false,""useImageHoverAnimation"":false,""scrollbarSize"":10}}" +
+                        $@"""ColorScheme"":{correctColorSchemeJson}" +
                     $@"}}" +
                 $@"}}";
         }

@@ -48,7 +48,8 @@ namespace MidnightLizard.Schemes.Commander.Controllers
                     }))
                 .UseStartup<StartupStub>());
             this.testClient = this.testServer.CreateClient();
-            this.testClient.DefaultRequestHeaders.Add("version", "1.0");
+            this.testClient.DefaultRequestHeaders.Add("api-version", "1.0");
+            this.testClient.DefaultRequestHeaders.Add("schema-version", "1.3.0");
         }
 
         public class PublishSpec : SchemeControllerSpec
@@ -60,7 +61,7 @@ namespace MidnightLizard.Schemes.Commander.Controllers
                 HttpContent jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
                 var result = await this.testClient.PostAsync("scheme", jsonContent);
 
-                result.StatusCode.Should().Be(HttpStatusCode.Accepted);
+                result.StatusCode.Should().Be(HttpStatusCode.Accepted, await result.Content.ReadAsStringAsync());
 
                 await this.testQueuer.Received(1).QueueRequest(Arg.Any<Request>(), Arg.Any<UserId>());
 
@@ -86,7 +87,7 @@ namespace MidnightLizard.Schemes.Commander.Controllers
 
                 var result = await this.testClient.DeleteAsync($"scheme/{testGuid}");
 
-                result.StatusCode.Should().Be(HttpStatusCode.Accepted);
+                result.StatusCode.Should().Be(HttpStatusCode.Accepted, await result.Content.ReadAsStringAsync());
 
                 await this.testQueuer.Received(1).QueueRequest(
                     Arg.Is<Request>(r => r.AggregateId == testGuid),

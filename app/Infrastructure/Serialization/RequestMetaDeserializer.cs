@@ -6,12 +6,13 @@ using Autofac.Features.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
 using MidnightLizard.Schemes.Commander.Requests.Base;
+using SemVer;
 
 namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
 {
     public interface IRequestMetaDeserializer
     {
-        Request Deserialize(Type requestType, ApiVersion apiVersion, string requestJson);
+        Request Deserialize(Type requestType, AppVersion schemaVersion, string requestJson);
     }
 
     public class RequestMetaDeserializer : IRequestMetaDeserializer
@@ -23,16 +24,16 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
             this.deserializers = deserializers;
         }
 
-        public virtual Request Deserialize(Type requestType, ApiVersion apiVersion, string requestJson)
+        public virtual Request Deserialize(Type requestType, AppVersion schemaVersion, string requestJson)
         {
             var deserializer = this.deserializers.FirstOrDefault(d =>
                 d.Metadata[nameof(Type)] as Type == requestType &&
-                (d.Metadata[nameof(Version)] as IReadOnlyList<ApiVersion>).Any(v => v == apiVersion));
+                (d.Metadata[nameof(SchemaVersionAttribute.VersionRange)] as Range).IsSatisfied(schemaVersion.Value));
             if (deserializer != null)
             {
                 return (deserializer.Value.Value as IRequestDeserializer<Request>).Deserialize(requestJson);
             }
-            throw new ApplicationException($"Deserializer for {requestType} and version {apiVersion} has not been found");
+            throw new ApplicationException($"Deserializer for {requestType} and schema version {schemaVersion} has not been found");
         }
     }
 }
