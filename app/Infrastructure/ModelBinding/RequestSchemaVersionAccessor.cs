@@ -9,19 +9,19 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
 {
     public class RequestSchemaVersionAccessor
     {
-        private static readonly string versionKey = "schema-version";
+        public string VersionKey { get; } = "schema-version";
 
         public virtual AppVersion GetSchemaVersion(ModelBindingContext bindingContext)
         {
             var versionValue = string.Empty;
-            if (bindingContext.HttpContext.Request.Query.Keys.Contains(versionKey))
+            if (bindingContext.HttpContext.Request.Query.Keys.Contains(VersionKey))
             {
-                versionValue = bindingContext.HttpContext.Request.Query[versionKey];
+                versionValue = bindingContext.HttpContext.Request.Query[VersionKey];
             }
             if (versionValue == string.Empty &&
-                bindingContext.HttpContext.Request.Headers.Keys.Contains(versionKey))
+                bindingContext.HttpContext.Request.Headers.Keys.Contains(VersionKey))
             {
-                versionValue = bindingContext.HttpContext.Request.Headers[versionKey];
+                versionValue = bindingContext.HttpContext.Request.Headers[VersionKey];
             }
             if (versionValue != string.Empty)
             {

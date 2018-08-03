@@ -31,22 +31,28 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
             try
             {
                 var schemaVersion = this.requestSchemaVersionAccessor.GetSchemaVersion(bindingContext);
-
-                string requestData = "";
-
-                if (bindingContext.BindingSource == BindingSource.Body)
+                if (schemaVersion != AppVersion.Unspecified)
                 {
-                    requestData = await this.requestBodyAccessor.ReadAsync(bindingContext);
+                    string requestData = "";
+
+                    if (bindingContext.BindingSource == BindingSource.Body)
+                    {
+                        requestData = await this.requestBodyAccessor.ReadAsync(bindingContext);
+                    }
+                    else
+                    {
+                        requestData = bindingContext.ValueProvider
+                            .GetValue(bindingContext.BinderModelName).FirstValue;
+                    }
+
+                    var request = this.requestSerializer.Deserialize(bindingContext.ModelType, schemaVersion, requestData);
+
+                    bindingContext.Result = ModelBindingResult.Success(request);
                 }
                 else
                 {
-                    requestData = bindingContext.ValueProvider
-                        .GetValue(bindingContext.BinderModelName).FirstValue;
+                    bindingContext.ModelState.AddModelError(this.requestSchemaVersionAccessor.VersionKey, "Schema version is required");
                 }
-
-                var request = this.requestSerializer.Deserialize(bindingContext.ModelType, schemaVersion, requestData);
-
-                bindingContext.Result = ModelBindingResult.Success(request);
             }
             catch (Exception ex)
             {

@@ -49,7 +49,7 @@ namespace MidnightLizard.Schemes.Commander.Controllers
                 .UseStartup<StartupStub>());
             this.testClient = this.testServer.CreateClient();
             this.testClient.DefaultRequestHeaders.Add("api-version", "1.0");
-            this.testClient.DefaultRequestHeaders.Add("schema-version", "1.3.0");
+            this.testClient.DefaultRequestHeaders.Add("schema-version", AppVersion.Latest.ToString());
         }
 
         public class PublishSpec : SchemeControllerSpec
@@ -64,7 +64,6 @@ namespace MidnightLizard.Schemes.Commander.Controllers
                 result.StatusCode.Should().Be(HttpStatusCode.Accepted, await result.Content.ReadAsStringAsync());
 
                 await this.testQueuer.Received(1).QueueRequest(Arg.Any<Request>(), Arg.Any<UserId>());
-
             }
 
             [It(nameof(SchemeController.Publish))]
@@ -74,6 +73,16 @@ namespace MidnightLizard.Schemes.Commander.Controllers
                 HttpContent jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
                 var result = await this.testClient.PostAsync("scheme", jsonContent);
 
+                result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            }
+
+            [It(nameof(SchemeController.Publish))]
+            public async Task Should_return_BadRequest_response_when_SchemaVersion_is_missing()
+            {
+                this.testClient.DefaultRequestHeaders.Remove("schema-version");
+                var json = JsonConvert.SerializeObject(PublishSchemeRequestSpec.CorrectPublishSchemeRequest);
+                HttpContent jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
+                var result = await this.testClient.PostAsync("scheme", jsonContent);
                 result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             }
         }
