@@ -15,5 +15,5 @@ docker build -t $IMAGE \
 kubectl config use-context minikube
 docker push $IMAGE
 ./helm-deploy.sh -i $IMAGE -r $PROJ -c ../kube/$PROJ \
-    -s env.ASPNETCORE_ENVIRONMENT=Development \
-    -s env.IDENTITY_URL=http://192.168.1.44:32326/
+    --set env.ASPNETCORE_ENVIRONMENT=Development \
+    --set env.IDENTITY_URL=http://192.168.1.35:32006/ \
