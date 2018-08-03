@@ -72,6 +72,10 @@ namespace MidnightLizard.Schemes.Commander
 
                     // name of the API resource
                     options.ApiName = "schemes-commander";
+                    options.ApiSecret = Configuration.GetValue<string>("IDENTITY_SCHEMES_COMMANDER_API_SECRET");
+
+                    options.EnableCaching = true;
+                    options.CacheDuration = TimeSpan.FromMinutes(10); // default = 10
                 });
         }
 
