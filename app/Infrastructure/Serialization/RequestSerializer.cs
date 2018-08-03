@@ -23,9 +23,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
             DateTimeZoneHandling = DateTimeZoneHandling.Utc,
             ContractResolver = MessageContractResolver.Default,
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-            Converters = new JsonConverter[] {
-                new StringEnumConverter(camelCaseText:true)
-            }
+            Converters = { new StringEnumConverter(camelCaseText: true) }
         };
 
         public RequestSerializer(AppVersion version)
