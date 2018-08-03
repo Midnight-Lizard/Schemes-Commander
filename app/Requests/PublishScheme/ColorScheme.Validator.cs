@@ -70,7 +70,7 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
             RuleFor(cs => cs.textHueGravity).InclusiveBetween(0, 100);
             RuleFor(cs => cs.linkHueGravity).InclusiveBetween(0, 100);
             RuleFor(cs => cs.borderHueGravity).InclusiveBetween(0, 100);
-            RuleFor(cs => cs.scrollbarStyle).Matches("^(?:true|false)$");
+            RuleFor(cs => cs.scrollbarStyle).NotEmpty().Matches("^(?:true|false)$");
             RuleFor(cs => cs.modeAutoSwitchLimit).InclusiveBetween(0, 10000);
             RuleFor(cs => cs.mode).IsInEnum();
         }

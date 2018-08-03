@@ -12,7 +12,8 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
         public PublishSchemeRequestValidator()
         {
             Include(new RequestValidator());
-            RuleFor(r => r.ColorScheme).NotNull();
+            RuleFor(r => r.ColorScheme).NotNull()
+                .SetValidator(new ColorSchemeValidator());
         }
     }
 }
