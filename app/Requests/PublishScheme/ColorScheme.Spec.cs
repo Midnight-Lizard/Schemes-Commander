@@ -110,6 +110,12 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
             }
 
             [It(nameof(ColorSchemeValidator))]
+            public void Should_fail_when_scrollbarStyle_is_empty()
+            {
+                validator.ShouldHaveValidationErrorFor(cs => cs.scrollbarStyle, string.Empty);
+            }
+
+            [It(nameof(ColorSchemeValidator))]
             public void Should_fail_when_colorSchemeName_is_too_long()
             {
                 validator.ShouldHaveValidationErrorFor(cs => cs.colorSchemeName, new string('*', 51));
