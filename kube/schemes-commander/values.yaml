@@ -14,6 +14,11 @@ service:
   internalPort: 80
 env:
   IDENTITY_URL: http://identity.midnight-lizard.online
+  ALLOWED_ORIGINS: "\
+    http://midnight-lizard.org,\
+    https://midnight-lizard.org,\
+    http://www.midnight-lizard.org,\
+    https://www.midnight-lizard.org"
   SCHEMES_QUEUE_CONFIG: |-
     {
       "TopicName": "schemes-requests-a",

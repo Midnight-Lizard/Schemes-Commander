@@ -1,27 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Autofac;
+using FluentValidation.AspNetCore;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Versioning;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using MidnightLizard.Schemes.Commander.AutofacModules;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using MidnightLizard.Schemes.Commander.Requests;
-using MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding;
+using MidnightLizard.Schemes.Commander.Configuration;
 using MidnightLizard.Schemes.Commander.Infrastructure.Middlewares;
+using MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding;
 using MidnightLizard.Schemes.Commander.Infrastructure.Queue;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using IdentityServer4.AccessTokenValidation;
+using System;
 
 namespace MidnightLizard.Schemes.Commander
 {
@@ -29,7 +20,7 @@ namespace MidnightLizard.Schemes.Commander
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -38,7 +29,7 @@ namespace MidnightLizard.Schemes.Commander
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<SCHEMES_QUEUE_CONFIG>(x => JsonConvert
-                .DeserializeObject<SCHEMES_QUEUE_CONFIG>(Configuration
+                .DeserializeObject<SCHEMES_QUEUE_CONFIG>(this.Configuration
                 .GetValue<string>(nameof(SCHEMES_QUEUE_CONFIG))));
 
             services.AddApiVersioning(o =>
@@ -48,11 +39,6 @@ namespace MidnightLizard.Schemes.Commander
                     new HeaderApiVersionReader("api-version", "x-api-version"),
                     new QueryStringApiVersionReader());
             });
-
-            services.AddCors(x => x.AddPolicy("all", p => p
-                 .AllowAnyHeader()
-                 .AllowAnyMethod()
-                 .AllowAnyOrigin()));
 
             services.AddMvc(opt =>
             {
@@ -67,12 +53,12 @@ namespace MidnightLizard.Schemes.Commander
                     options.RequireHttpsMetadata = false;
 
                     // base-address of your identityserver
-                    options.Authority = Configuration
+                    options.Authority = this.Configuration
                         .GetValue<string>("IDENTITY_URL");
 
                     // name of the API resource
                     options.ApiName = "schemes-commander";
-                    options.ApiSecret = Configuration.GetValue<string>("IDENTITY_SCHEMES_COMMANDER_API_SECRET");
+                    options.ApiSecret = this.Configuration.GetValue<string>("IDENTITY_SCHEMES_COMMANDER_API_SECRET");
 
                     options.EnableCaching = true;
                     options.CacheDuration = TimeSpan.FromMinutes(10); // default = 10
@@ -90,7 +76,12 @@ namespace MidnightLizard.Schemes.Commander
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseCors("all");
+            //app.UseHttpsRedirection();
+            var corsConfig = new CorsConfig();
+            this.Configuration.Bind(corsConfig);
+            app.UseCors(builder => builder
+                .WithOrigins(corsConfig.ALLOWED_ORIGINS.Split(','))
+                .AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseMvc();
