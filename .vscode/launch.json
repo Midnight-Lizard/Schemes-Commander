@@ -26,9 +26,6 @@
             },
             // "preLaunchTask": "find pod",
             "pipeTransport": {
-                "pipeEnv": {
-                    "POD": "123"
-                },
                 "pipeProgram": "C:\\Program Files\\Git\\bin\\bash.exe",
                 "pipeCwd": "${workspaceRoot}",
                 "pipeArgs": [
