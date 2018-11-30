@@ -61,7 +61,7 @@ namespace MidnightLizard.Schemes.Commander
                     options.ApiSecret = this.Configuration.GetValue<string>("IDENTITY_SCHEMES_COMMANDER_API_SECRET");
 
                     options.EnableCaching = true;
-                    options.CacheDuration = TimeSpan.FromMinutes(10); // default = 10
+                    options.CacheDuration = TimeSpan.FromMinutes(1); // default = 10
                 });
         }
 
