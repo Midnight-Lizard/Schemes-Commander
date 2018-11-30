@@ -12,7 +12,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
 {
     public interface IRequestMetaDeserializer
     {
-        Request Deserialize(Type requestType, AppVersion schemaVersion, string requestJson);
+        Request Deserialize(Type requestType, SchemaVersion schemaVersion, string requestJson);
     }
 
     public class RequestMetaDeserializer : IRequestMetaDeserializer
@@ -24,7 +24,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
             this.deserializers = deserializers;
         }
 
-        public virtual Request Deserialize(Type requestType, AppVersion schemaVersion, string requestJson)
+        public virtual Request Deserialize(Type requestType, SchemaVersion schemaVersion, string requestJson)
         {
             var deserializer = this.deserializers.FirstOrDefault(d =>
                 d.Metadata[nameof(Type)] as Type == requestType &&

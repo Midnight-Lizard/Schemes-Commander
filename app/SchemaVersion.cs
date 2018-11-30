@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander
 {
-    public class AppVersion
+    public class SchemaVersion
     {
-        private AppVersion() { }
+        private SchemaVersion() { }
 
-        public AppVersion(string version)
+        public SchemaVersion(string version)
         {
             Value = new SemVer.Version(version);
         }
@@ -21,7 +21,7 @@ namespace MidnightLizard.Schemes.Commander
             return Value.ToString();
         }
 
-        public static AppVersion Latest { get; } = new AppVersion("9.3.0");
-        public static AppVersion Unspecified { get; } = new AppVersion();
+        public static SchemaVersion Latest { get; } = new SchemaVersion("10.1.6");
+        public static SchemaVersion Unspecified { get; } = new SchemaVersion();
     }
 }

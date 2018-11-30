@@ -16,7 +16,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
 
     public class RequestSerializer : IRequestSerializer
     {
-        private readonly AppVersion version;
+        private readonly SchemaVersion version;
         private readonly JsonSerializerSettings serializerSettings = new JsonSerializerSettings
         {
             //Formatting = Formatting.Indented,
@@ -26,7 +26,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
             Converters = { new StringEnumConverter(camelCaseText: true) }
         };
 
-        public RequestSerializer(AppVersion version)
+        public RequestSerializer(SchemaVersion version)
         {
             this.version = version;
         }

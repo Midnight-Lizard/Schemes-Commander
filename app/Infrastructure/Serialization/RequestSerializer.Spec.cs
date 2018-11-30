@@ -1,13 +1,11 @@
 ﻿using FluentAssertions;
 using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
+using MidnightLizard.Schemes.Commander.Requests.Base;
 using MidnightLizard.Schemes.Commander.Requests.PublishScheme;
 using MidnightLizard.Testing.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
 {
@@ -24,17 +22,17 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
                 ColorSchemeSpec.CorrectColorScheme, new[] {
                 new StringEnumConverter(true)
             });
-            this.serialiser = new RequestSerializer(AppVersion.Latest);
-            snapshot =
+            this.serialiser = new RequestSerializer(SchemaVersion.Latest);
+            this.snapshot =
                 $@"{{" +
-                    $@"""CorrelationId"":""{id}""," +
+                    $@"""CorrelationId"":""{this.id}""," +
                     $@"""Type"":""PublishSchemeRequest""," +
-                    $@"""Version"":""{AppVersion.Latest}""," +
-                    $@"""UserId"":""{testUserId.Value}""," +
+                    $@"""Version"":""{SchemaVersion.Latest}""," +
+                    $@"""UserId"":""{this.testUserId.Value}""," +
                     $@"""Payload"":" +
                     $@"{{" +
-                        $@"""AggregateId"":""{aggregateId}""," +
-                        $@"""Id"":""{id}""," +
+                        $@"""AggregateId"":""{this.aggregateId}""," +
+                        $@"""Id"":""{this.id}""," +
                         $@"""ColorScheme"":{correctColorSchemeJson}" +
                     $@"}}" +
                 $@"}}";

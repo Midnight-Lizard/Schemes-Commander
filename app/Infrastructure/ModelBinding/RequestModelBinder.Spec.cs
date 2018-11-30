@@ -22,7 +22,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
         private readonly RequestBodyAccessor bodyAccessor;
         private readonly RequestModelBinder modelBinder;
         private readonly ModelBindingContext context;
-        private readonly AppVersion testSchemaVersion = new AppVersion("1.3.0");
+        private readonly SchemaVersion testSchemaVersion = new SchemaVersion("1.3.0");
         private readonly string testBody = "test";
 
         public RequestModelBinderSpec()

@@ -31,7 +31,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
             try
             {
                 var schemaVersion = this.requestSchemaVersionAccessor.GetSchemaVersion(bindingContext);
-                if (schemaVersion != AppVersion.Unspecified)
+                if (schemaVersion != SchemaVersion.Unspecified)
                 {
                     string requestData = "";
 

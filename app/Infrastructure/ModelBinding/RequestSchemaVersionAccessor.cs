@@ -11,7 +11,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
     {
         public string VersionKey { get; } = "schema-version";
 
-        public virtual AppVersion GetSchemaVersion(ModelBindingContext bindingContext)
+        public virtual SchemaVersion GetSchemaVersion(ModelBindingContext bindingContext)
         {
             var versionValue = string.Empty;
             if (bindingContext.HttpContext.Request.Query.Keys.Contains(VersionKey))
@@ -25,9 +25,9 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
             }
             if (versionValue != string.Empty)
             {
-                return new AppVersion(versionValue);
+                return new SchemaVersion(versionValue);
             }
-            return AppVersion.Unspecified;
+            return SchemaVersion.Unspecified;
         }
     }
 }
