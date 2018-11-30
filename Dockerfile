@@ -3,8 +3,8 @@
 #===========================================#
 FROM microsoft/dotnet:2.1-sdk as dotnet-build
 ARG DOTNET_CONFIG=Release
-COPY /app/*.csproj /build/
 WORKDIR /build
+COPY /app/*.csproj ./
 RUN dotnet restore
 COPY /app/ .
 RUN dotnet publish -c ${DOTNET_CONFIG} -o ./results
