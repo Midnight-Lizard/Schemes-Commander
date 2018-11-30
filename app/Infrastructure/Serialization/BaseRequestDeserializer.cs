@@ -23,6 +23,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
             var request = DeserializeRequest(requestData);
             StartAdvancingToTheLatestVersion(request);
             request.Id = request.Id == default ? Guid.NewGuid() : request.Id;
+            request.DeserializerType = this.GetType();
             return request;
         }
 
