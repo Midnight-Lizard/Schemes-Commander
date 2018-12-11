@@ -50,7 +50,7 @@ namespace MidnightLizard.Schemes.Commander
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.RequireHttpsMetadata = false;
+                    options.RequireHttpsMetadata = true;
 
                     // base-address of your identityserver
                     options.Authority = this.Configuration
@@ -60,8 +60,9 @@ namespace MidnightLizard.Schemes.Commander
                     options.ApiName = "schemes-commander";
                     options.ApiSecret = this.Configuration.GetValue<string>("IDENTITY_SCHEMES_COMMANDER_API_SECRET");
 
-                    options.EnableCaching = true;
+                    options.EnableCaching = false;
                     options.CacheDuration = TimeSpan.FromMinutes(1); // default = 10
+                    options.JwtValidationClockSkew = TimeSpan.FromMinutes(4);
                 });
         }
 
@@ -77,13 +78,13 @@ namespace MidnightLizard.Schemes.Commander
         public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             //app.UseHttpsRedirection();
+            app.UseMiddleware<ExceptionMiddleware>();
             var corsConfig = new CorsConfig();
             this.Configuration.Bind(corsConfig);
             app.UseCors(builder => builder
                 .WithOrigins(corsConfig.ALLOWED_ORIGINS.Split(','))
                 .AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
-            app.UseMiddleware<ExceptionMiddleware>();
             app.UseMvc();
         }
     }
