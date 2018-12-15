@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
-using MidnightLizard.Schemes.Commander.Requests.Base;
 using MidnightLizard.Schemes.Commander.Requests.PublishScheme;
 using MidnightLizard.Testing.Utilities;
 using Newtonsoft.Json;
@@ -14,6 +13,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
         private readonly RequestSerializer serialiser;
         private readonly UserId testUserId = new UserId("test-user-id");
         private readonly Guid id = Guid.NewGuid(), aggregateId = Guid.NewGuid();
+        private readonly string testDescription = "test desc";
         private readonly string snapshot;
 
         public RequestSerializerSpec()
@@ -33,6 +33,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
                     $@"{{" +
                         $@"""AggregateId"":""{this.aggregateId}""," +
                         $@"""Id"":""{this.id}""," +
+                        $@"""Description"":""{this.testDescription}""," +
                         $@"""ColorScheme"":{correctColorSchemeJson}" +
                     $@"}}" +
                 $@"}}";
@@ -45,6 +46,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
 
             testRequest.AggregateId = this.aggregateId;
             testRequest.Id = this.id;
+            testRequest.Description = this.testDescription;
 
             var json = this.serialiser.Serialize(testRequest, this.testUserId);
             json.Should().Be(this.snapshot);

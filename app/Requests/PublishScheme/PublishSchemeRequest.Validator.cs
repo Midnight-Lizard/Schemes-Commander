@@ -1,9 +1,5 @@
 ﻿using FluentValidation;
 using MidnightLizard.Schemes.Commander.Requests.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
 {
@@ -11,8 +7,9 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
     {
         public PublishSchemeRequestValidator()
         {
-            Include(new RequestValidator());
-            RuleFor(r => r.ColorScheme).NotNull()
+            this.Include(new RequestValidator());
+            this.RuleFor(x => x.Description).MaximumLength(2000);
+            this.RuleFor(r => r.ColorScheme).NotNull()
                 .SetValidator(new ColorSchemeValidator());
         }
     }
