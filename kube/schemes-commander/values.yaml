@@ -8,6 +8,7 @@ service:
   externalPort: 80
   internalPort: 80
 env:
+  REWRITE_TARGET: ^schemes/commander/(.*)
   IDENTITY_URL: https://identity.midnight-lizard.org
   ALLOWED_ORIGINS: "\
     https://midnight-lizard.org,\
