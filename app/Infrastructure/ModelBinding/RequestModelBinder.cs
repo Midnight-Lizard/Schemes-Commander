@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
-using MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MidnightLizard.Schemes.Commander.Infrastructure.Serialization;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
@@ -14,38 +9,23 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
     {
         protected readonly IRequestMetaDeserializer requestSerializer;
         protected readonly RequestSchemaVersionAccessor requestSchemaVersionAccessor;
-        protected readonly RequestBodyAccessor requestBodyAccessor;
 
         public RequestModelBinder(
             IRequestMetaDeserializer requestSerializer,
-            RequestSchemaVersionAccessor requestVersionAccessor,
-            RequestBodyAccessor requestBodyAccessor)
+            RequestSchemaVersionAccessor requestVersionAccessor)
         {
-            this.requestBodyAccessor = requestBodyAccessor;
             this.requestSerializer = requestSerializer;
             this.requestSchemaVersionAccessor = requestVersionAccessor;
         }
 
-        public async Task BindModelAsync(ModelBindingContext bindingContext)
+        public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             try
             {
                 var schemaVersion = this.requestSchemaVersionAccessor.GetSchemaVersion(bindingContext);
                 if (schemaVersion != SchemaVersion.Unspecified)
                 {
-                    string requestData = "";
-
-                    if (bindingContext.BindingSource == BindingSource.Body)
-                    {
-                        requestData = await this.requestBodyAccessor.ReadAsync(bindingContext);
-                    }
-                    else
-                    {
-                        requestData = bindingContext.ValueProvider
-                            .GetValue(bindingContext.BinderModelName).FirstValue;
-                    }
-
-                    var request = this.requestSerializer.Deserialize(bindingContext.ModelType, schemaVersion, requestData);
+                    var request = this.requestSerializer.Deserialize(bindingContext.ModelType, schemaVersion, bindingContext);
 
                     bindingContext.Result = ModelBindingResult.Success(request);
                 }
@@ -58,6 +38,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
             {
                 bindingContext.ModelState.AddModelError(bindingContext.FieldName, ex.Message);
             }
+            return Task.CompletedTask;
         }
     }
 }
