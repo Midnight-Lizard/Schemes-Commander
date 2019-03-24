@@ -105,8 +105,8 @@ namespace MidnightLizard.Schemes.Commander
                 c.AddSecurityDefinition("OAuth2", new OAuth2Scheme
                 {
                     Type = "oauth2",
-                    Flow = "authorization_code",
-                    AuthorizationUrl = authUrl,
+                    Flow = "password",
+                    //AuthorizationUrl = authUrl,
                     TokenUrl = tokenUrl,
                     Scopes = new Dictionary<string, string>
                         { { "schemes-commander", "Schemes Commander API - Full Access" } }
