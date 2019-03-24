@@ -88,10 +88,11 @@ namespace MidnightLizard.Schemes.Commander
 
                 c.OperationFilter<SwaggerDefaultValuesFilter>();
 
-                var authUrl = new Uri(new Uri(
-                    this.Configuration.GetValue<string>("IDENTITY_URL") ?? "http://localhost:7001"),
-                    "connect/authorize")
-                    .AbsoluteUri;
+                var idSrvUrl = new Uri(
+                    this.Configuration.GetValue<string>("IDENTITY_URL")
+                    ?? "http://localhost:7001");
+                var authUrl = new Uri(idSrvUrl, "connect/authorize").AbsoluteUri;
+                var tokenUrl = new Uri(idSrvUrl, "connect/token").AbsoluteUri;
 
                 c.AddSecurityDefinition("Bearer", new ApiKeyScheme
                 {
@@ -101,16 +102,18 @@ namespace MidnightLizard.Schemes.Commander
                     Type = "apiKey"
                 });
 
-                c.AddSecurityDefinition("oauth2", new OAuth2Scheme
+                c.AddSecurityDefinition("OAuth2", new OAuth2Scheme
                 {
-                    Flow = "implicit",
-                    AuthorizationUrl = authUrl,
+                    Type = "oauth2",
+                    Flow = "authorization_code",
+                    //AuthorizationUrl = authUrl,
+                    TokenUrl = tokenUrl,
                     Scopes = new Dictionary<string, string>
                         { { "schemes-commander", "Schemes Commander API - Full Access" } }
                 });
 
                 c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
-                    { "Bearer", new string[] { } }
+                    { "OAuth2", new string[] { } }
                 });
             });
         }
