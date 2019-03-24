@@ -13,7 +13,11 @@ using MidnightLizard.Schemes.Commander.Infrastructure.Middlewares;
 using MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding;
 using MidnightLizard.Schemes.Commander.Infrastructure.Queue;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace MidnightLizard.Schemes.Commander
 {
@@ -65,6 +69,29 @@ namespace MidnightLizard.Schemes.Commander
                     options.CacheDuration = TimeSpan.FromMinutes(1); // default = 10
                     options.JwtValidationClockSkew = TimeSpan.FromMinutes(4);
                 });
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Title = "Midnight Lizard Schemes Commander API",
+                    Version = "v1"
+                });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
+                c.AddSecurityDefinition("oauth2", new OAuth2Scheme
+                {
+                    Flow = "implicit",
+                    AuthorizationUrl = this.Configuration.GetValue<string>("IDENTITY_URL"),
+                    Scopes = new Dictionary<string, string>
+                        { { "schemes-commander", "Schemes Commander API - Full Access" } }
+                });
+            });
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -92,6 +119,20 @@ namespace MidnightLizard.Schemes.Commander
                 app.UseRewriter(new RewriteOptions().AddRewrite(
                     rewriteTargetRegex, "$1", skipRemainingRules: true));
             }
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("./swagger/v1/swagger.json", "schemes-commander-v1");
+                c.RoutePrefix = string.Empty;
+                c.OAuthClientId("schemes-commander-swagger");
+                c.OAuthAppName("Schemes Commander API - Swagger UI");
+            });
+
             app.UseMvc();
         }
     }

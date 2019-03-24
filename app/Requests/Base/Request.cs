@@ -1,16 +1,18 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander.Requests.Base
 {
     public class Request
     {
+        /// <summary>
+        /// ID of the color scheme you want to delete
+        /// </summary>
         public Guid AggregateId { get; set; }
-        public Guid Id { get; set; }
+
+        internal Guid Id { get; set; }
+
         [JsonIgnore]
-        public Type DeserializerType { get; set; }
+        internal Type DeserializerType { get; set; }
     }
 }

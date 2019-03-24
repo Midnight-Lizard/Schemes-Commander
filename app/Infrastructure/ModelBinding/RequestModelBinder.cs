@@ -31,7 +31,7 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
                 }
                 else
                 {
-                    bindingContext.ModelState.AddModelError(this.requestSchemaVersionAccessor.VersionKey, "Schema version is required");
+                    bindingContext.ModelState.AddModelError(RequestSchemaVersionAccessor.VersionKey, "Schema version is required");
                 }
             }
             catch (Exception ex)

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MidnightLizard.Schemes.Commander</name>
+    </assembly>
+    <members>
+        <member name="M:MidnightLizard.Schemes.Commander.Controllers.SchemeController.Publish(MidnightLizard.Schemes.Commander.Requests.PublishScheme.PublishSchemeRequest,System.String)">
+            <summary>
+            Publishes first or new version of Color Scheme
+            </summary>
+            <param name="request">Publish Scheme Request</param>
+            <param name="schemaVersion">Midnight Lizard global schema version</param>
+            <returns></returns>
+        </member>
+        <member name="M:MidnightLizard.Schemes.Commander.Controllers.SchemeController.Unpublish(MidnightLizard.Schemes.Commander.Requests.PublishScheme.UnpublishSchemeRequest,System.String)">
+            <summary>
+            Removes color scheme from the registry
+            </summary>
+            <param name="request">AggregateId from path</param>
+            <param name="schemaVersion">Midnight Lizard global schema version</param>
+            <returns></returns>
+        </member>
+        <member name="M:MidnightLizard.Schemes.Commander.Infrastructure.Serialization.SchemaVersionAttribute.#ctor(System.String)">
+            <summary>
+            Schema version range attribute
+            </summary>
+            <param name="rangeSpec">SemVer version range spec</param>
+        </member>
+        <member name="P:MidnightLizard.Schemes.Commander.Requests.Base.Request.AggregateId">
+            <summary>
+            ID of the color scheme you want to delete
+            </summary>
+        </member>
+        <member name="T:MidnightLizard.Schemes.Commander.Requests.PublishScheme.ColorScheme">
+            <summary>
+            Color Scheme
+            </summary>
+        </member>
+    </members>
+</doc>

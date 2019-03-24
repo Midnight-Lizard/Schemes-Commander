@@ -1,15 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding
 {
     public class RequestSchemaVersionAccessor
     {
-        public string VersionKey { get; } = "schema-version";
+        public const string VersionKey = "schema-version";
 
         public virtual SchemaVersion GetSchemaVersion(ModelBindingContext bindingContext)
         {

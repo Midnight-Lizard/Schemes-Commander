@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
 {
+    /// <summary>
+    /// Color Scheme
+    /// </summary>
     public class ColorScheme
     {
         public string colorSchemeId { get; set; }

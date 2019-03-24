@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
-using Confluent.Kafka.Serialization;
-using System.Text;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Http;
-using MidnightLizard.Schemes.Commander.Requests.PublishScheme;
-using System.Net;
-using MidnightLizard.Schemes.Commander.Infrastructure.Queue;
-using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using MidnightLizard.Schemes.Commander.Infrastructure.ActionFilters;
+using MidnightLizard.Schemes.Commander.Infrastructure.Authentication;
+using MidnightLizard.Schemes.Commander.Infrastructure.ModelBinding;
+using MidnightLizard.Schemes.Commander.Infrastructure.Queue;
+using MidnightLizard.Schemes.Commander.Requests.PublishScheme;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace MidnightLizard.Schemes.Commander.Controllers
 {
@@ -29,9 +24,9 @@ namespace MidnightLizard.Schemes.Commander.Controllers
 
         protected UserId GetUserId()
         {
-            if (User != null)
+            if (this.User != null)
             {
-                var subClaim = User.FindFirst("sub");
+                var subClaim = this.User.FindFirst("sub");
                 if (subClaim != null)
                 {
                     return new UserId(subClaim.Value);
@@ -48,26 +43,50 @@ namespace MidnightLizard.Schemes.Commander.Controllers
             this.requestQueuer = requestQueuer;
         }
 
+        /// <summary>
+        /// Publishes first or new version of Color Scheme
+        /// </summary>
+        /// <param name="request">Publish Scheme Request</param>
+        /// <param name="schemaVersion">Midnight Lizard global schema version</param>
+        /// <returns></returns>
+        [Produces("text/plain")]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [HttpPost]
-        public async Task<IActionResult> Publish([FromBody] PublishSchemeRequest request)
+        public async Task<IActionResult> Publish(
+            [FromBody]
+            PublishSchemeRequest request,
+
+            [Required]
+            [FromHeader(Name = RequestSchemaVersionAccessor.VersionKey)]
+            string schemaVersion)
         {
             await this.requestQueuer.QueueRequest(request, this.GetUserId());
-            return Accepted(request.Id);
+            return this.Accepted(request.Id);
         }
 
+        /// <summary>
+        /// Removes color scheme from the registry
+        /// </summary>
+        /// <param name="request">AggregateId from path</param>
+        /// <param name="schemaVersion">Midnight Lizard global schema version</param>
+        /// <returns></returns>
+        [Produces("text/plain")]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [HttpDelete("{" + nameof(UnpublishSchemeRequest.AggregateId) + "}")]
         public async Task<IActionResult> Unpublish(
             [FromRoute(Name = nameof(UnpublishSchemeRequest.AggregateId))]
-            UnpublishSchemeRequest request)
+            UnpublishSchemeRequest request,
+
+            [Required]
+            [FromHeader(Name = RequestSchemaVersionAccessor.VersionKey)]
+            string schemaVersion)
         {
             await this.requestQueuer.QueueRequest(request, this.GetUserId());
-            return Accepted(request.Id);
+            return this.Accepted(request.Id);
         }
     }
 }
