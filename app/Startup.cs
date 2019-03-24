@@ -86,10 +86,20 @@ namespace MidnightLizard.Schemes.Commander
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
 
+                c.OperationFilter<SwaggerDefaultValuesFilter>();
+
                 var authUrl = new Uri(new Uri(
                     this.Configuration.GetValue<string>("IDENTITY_URL") ?? "http://localhost:7001"),
                     "connect/authorize")
                     .AbsoluteUri;
+
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
 
                 c.AddSecurityDefinition("oauth2", new OAuth2Scheme
                 {
@@ -97,6 +107,10 @@ namespace MidnightLizard.Schemes.Commander
                     AuthorizationUrl = authUrl,
                     Scopes = new Dictionary<string, string>
                         { { "schemes-commander", "Schemes Commander API - Full Access" } }
+                });
+
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
+                    { "Bearer", new string[] { } }
                 });
             });
         }

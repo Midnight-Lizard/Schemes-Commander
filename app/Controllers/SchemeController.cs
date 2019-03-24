@@ -47,19 +47,11 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         /// Publishes first or new version of Color Scheme
         /// </summary>
         /// <param name="request">Publish Scheme Request</param>
-        /// <param name="schemaVersion">Midnight Lizard global schema version</param>
-        /// <returns></returns>
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [HttpPost]
-        public async Task<IActionResult> Publish(
-            [FromBody]
-            PublishSchemeRequest request,
-
-            [Required]
-            [FromHeader(Name = RequestSchemaVersionAccessor.VersionKey)]
-            string schemaVersion)
+        public async Task<IActionResult> Publish([FromBody] PublishSchemeRequest request)
         {
             await this.requestQueuer.QueueRequest(request, this.GetUserId());
             return this.Accepted(request.Id);
@@ -69,15 +61,11 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         /// Removes color scheme from the registry
         /// </summary>
         /// <param name="request">AggregateId from path</param>
-        /// <param name="schemaVersion">Midnight Lizard global schema version</param>
-        /// <returns></returns>
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [HttpDelete("{" + nameof(UnpublishSchemeRequest.AggregateId) + "}")]
-        public async Task<IActionResult> Unpublish(UnpublishSchemeRequest request,
-            [Required][FromHeader(Name = RequestSchemaVersionAccessor.VersionKey)]
-            string schemaVersion)
+        public async Task<IActionResult> Unpublish(UnpublishSchemeRequest request)
         {
             await this.requestQueuer.QueueRequest(request, this.GetUserId());
             return this.Accepted(request.Id);
