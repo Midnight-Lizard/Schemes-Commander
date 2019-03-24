@@ -106,7 +106,7 @@ namespace MidnightLizard.Schemes.Commander
                 {
                     Type = "oauth2",
                     Flow = "authorization_code",
-                    //AuthorizationUrl = authUrl,
+                    AuthorizationUrl = authUrl,
                     TokenUrl = tokenUrl,
                     Scopes = new Dictionary<string, string>
                         { { "schemes-commander", "Schemes Commander API - Full Access" } }
