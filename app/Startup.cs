@@ -87,7 +87,8 @@ namespace MidnightLizard.Schemes.Commander
                 c.IncludeXmlComments(xmlPath);
 
                 var authUrl = new Uri(new Uri(
-                    this.Configuration.GetValue<string>("IDENTITY_URL")), "connect/authorize")
+                    this.Configuration.GetValue<string>("IDENTITY_URL") ?? "http://localhost:7001"),
+                    "connect/authorize")
                     .AbsoluteUri;
 
                 c.AddSecurityDefinition("oauth2", new OAuth2Scheme
