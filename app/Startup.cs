@@ -128,7 +128,22 @@ namespace MidnightLizard.Schemes.Commander
             }
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
+            app.UseSwagger(c =>
+            {
+                var swgPrefix = this.Configuration.GetValue<string>("SWAGGER_API_PREFIX");
+                if (!string.IsNullOrEmpty(swgPrefix))
+                {
+                    c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
+                    {
+                        IDictionary<string, PathItem> paths = new Dictionary<string, PathItem>();
+                        foreach (var path in swaggerDoc.Paths)
+                        {
+                            paths.Add(swgPrefix + path.Key, path.Value);
+                        }
+                        swaggerDoc.Paths = paths;
+                    });
+                }
+            });
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
             // specifying the Swagger JSON endpoint.
