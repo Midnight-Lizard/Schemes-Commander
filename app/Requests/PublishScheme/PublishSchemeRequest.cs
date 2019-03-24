@@ -10,6 +10,11 @@ namespace MidnightLizard.Schemes.Commander.Requests.PublishScheme
         /// </summary>
         public override Guid AggregateId { get => base.AggregateId; set => base.AggregateId = value; }
 
+        /// <summary>
+        /// Optional Request ID
+        /// </summary>
+        public override Guid Id { get => base.Id; set => base.Id = value; }
+
         public string Description { get; set; }
         public ColorScheme ColorScheme { get; set; }
     }
