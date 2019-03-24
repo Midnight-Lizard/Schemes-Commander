@@ -8,9 +8,9 @@ namespace MidnightLizard.Schemes.Commander.Requests.Base
         /// <summary>
         /// ID of the color scheme you want to delete
         /// </summary>
-        public Guid AggregateId { get; set; }
+        public virtual Guid AggregateId { get; set; }
 
-        internal Guid Id { get; set; }
+        public virtual Guid Id { get; set; }
 
         [JsonIgnore]
         internal Type DeserializerType { get; set; }

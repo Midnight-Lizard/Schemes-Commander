@@ -49,7 +49,6 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         /// <param name="request">Publish Scheme Request</param>
         /// <param name="schemaVersion">Midnight Lizard global schema version</param>
         /// <returns></returns>
-        [Produces("text/plain")]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
@@ -72,17 +71,12 @@ namespace MidnightLizard.Schemes.Commander.Controllers
         /// <param name="request">AggregateId from path</param>
         /// <param name="schemaVersion">Midnight Lizard global schema version</param>
         /// <returns></returns>
-        [Produces("text/plain")]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [HttpDelete("{" + nameof(UnpublishSchemeRequest.AggregateId) + "}")]
-        public async Task<IActionResult> Unpublish(
-            [FromRoute(Name = nameof(UnpublishSchemeRequest.AggregateId))]
-            UnpublishSchemeRequest request,
-
-            [Required]
-            [FromHeader(Name = RequestSchemaVersionAccessor.VersionKey)]
+        public async Task<IActionResult> Unpublish(UnpublishSchemeRequest request,
+            [Required][FromHeader(Name = RequestSchemaVersionAccessor.VersionKey)]
             string schemaVersion)
         {
             await this.requestQueuer.QueueRequest(request, this.GetUserId());

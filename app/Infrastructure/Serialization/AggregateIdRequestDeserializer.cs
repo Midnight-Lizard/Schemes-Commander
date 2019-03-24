@@ -14,11 +14,18 @@ namespace MidnightLizard.Schemes.Commander.Infrastructure.Serialization
         protected override TRequest DeserializeRequest(ModelBindingContext bindingContext)
         {
             var aggId = Guid.Parse(bindingContext.ValueProvider
-                            .GetValue(bindingContext.BinderModelName)
+                            .GetValue(nameof(Request.AggregateId))
                             .FirstValue);
+            var reqIdStr = bindingContext.ValueProvider
+                            .GetValue(nameof(Request.Id))
+                            .FirstValue;
+            var reqId = string.IsNullOrEmpty(reqIdStr)
+                ? Guid.NewGuid() : Guid.Parse(reqIdStr);
+
             return new TRequest
             {
-                AggregateId = aggId
+                AggregateId = aggId,
+                Id = reqId
             };
         }
     }

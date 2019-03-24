@@ -76,7 +76,7 @@ namespace MidnightLizard.Schemes.Commander.Controllers
                 HttpContent jsonContent = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
                 var result = await this.testClient.PostAsync("scheme", jsonContent);
 
-                result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                result.StatusCode.Should().Be(HttpStatusCode.BadRequest, await result.Content.ReadAsStringAsync());
             }
 
             [It(nameof(SchemeController.Publish))]
@@ -86,7 +86,7 @@ namespace MidnightLizard.Schemes.Commander.Controllers
                 var json = JsonConvert.SerializeObject(PublishSchemeRequestSpec.CorrectPublishSchemeRequest);
                 HttpContent jsonContent = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json);
                 var result = await this.testClient.PostAsync("scheme", jsonContent);
-                result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                result.StatusCode.Should().Be(HttpStatusCode.BadRequest, await result.Content.ReadAsStringAsync());
             }
         }
 
@@ -95,16 +95,16 @@ namespace MidnightLizard.Schemes.Commander.Controllers
             [It(nameof(SchemeController.Unpublish))]
             public async Task Should_successfuly_process_correct_UnpublishSchemeRequest()
             {
-                var testGuid = Guid.NewGuid();
+                var testAggId = Guid.NewGuid();
+                var testReqId = Guid.NewGuid();
 
-                var result = await this.testClient.DeleteAsync($"scheme/{testGuid}");
+                var result = await this.testClient.DeleteAsync($"scheme/{testAggId}?id={testReqId}");
 
                 result.StatusCode.Should().Be(HttpStatusCode.Accepted, await result.Content.ReadAsStringAsync());
 
                 await this.testQueuer.Received(1).QueueRequest(
-                    Arg.Is<Request>(r => r.AggregateId == testGuid),
+                    Arg.Is<Request>(r => r.AggregateId == testAggId && r.Id == testReqId),
                     Arg.Any<UserId>());
-
             }
 
             [It(nameof(SchemeController.Unpublish))]
@@ -112,7 +112,7 @@ namespace MidnightLizard.Schemes.Commander.Controllers
             {
                 var result = await this.testClient.DeleteAsync("scheme/123");
 
-                result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                result.StatusCode.Should().Be(HttpStatusCode.BadRequest, await result.Content.ReadAsStringAsync());
             }
         }
     }
