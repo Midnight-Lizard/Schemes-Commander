@@ -5,10 +5,7 @@
     <LangVersion>Latest</LangVersion>
     <Configurations>Debug;Release;Test</Configurations>
     <StartupObject>MidnightLizard.Schemes.Commander.Program</StartupObject>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|AnyCPU'">
-    <DocumentationFile>C:\Projects\MidnightLizard\Schemes\Commander\app\MidnightLizard.Schemes.Commander.xml</DocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 

@@ -28,12 +28,32 @@
         </member>
         <member name="P:MidnightLizard.Schemes.Commander.Requests.Base.Request.AggregateId">
             <summary>
-            ID of the color scheme you want to delete
+            ID of the Aggregate that should process current Request
+            </summary>
+        </member>
+        <member name="P:MidnightLizard.Schemes.Commander.Requests.Base.Request.Id">
+            <summary>
+            Request ID
             </summary>
         </member>
         <member name="T:MidnightLizard.Schemes.Commander.Requests.PublishScheme.ColorScheme">
             <summary>
             Color Scheme
+            </summary>
+        </member>
+        <member name="P:MidnightLizard.Schemes.Commander.Requests.PublishScheme.PublishSchemeRequest.AggregateId">
+            <summary>
+            ID of the color scheme you want to publish
+            </summary>
+        </member>
+        <member name="P:MidnightLizard.Schemes.Commander.Requests.PublishScheme.UnpublishSchemeRequest.Id">
+            <summary>
+            Request ID
+            </summary>
+        </member>
+        <member name="P:MidnightLizard.Schemes.Commander.Requests.PublishScheme.UnpublishSchemeRequest.AggregateId">
+            <summary>
+            ID of the color scheme you want to delete
             </summary>
         </member>
     </members>
