@@ -84,10 +84,14 @@ namespace MidnightLizard.Schemes.Commander
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
 
+                var authUrl = new Uri(new Uri(
+                    this.Configuration.GetValue<string>("IDENTITY_URL")), "connect/authorize")
+                    .AbsoluteUri;
+
                 c.AddSecurityDefinition("oauth2", new OAuth2Scheme
                 {
                     Flow = "implicit",
-                    AuthorizationUrl = this.Configuration.GetValue<string>("IDENTITY_URL"),
+                    AuthorizationUrl = authUrl,
                     Scopes = new Dictionary<string, string>
                         { { "schemes-commander", "Schemes Commander API - Full Access" } }
                 });
